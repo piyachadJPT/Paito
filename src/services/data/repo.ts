@@ -2,7 +2,8 @@ import { tripRowsToFile } from "@/lib/import/export";
 import { tripFileToRows, type TripFile } from "@/lib/import/import-schema";
 import { DEFAULT_TIMEZONE, eachDateKey, zonedLocalToUtc } from "@/lib/time";
 import type { PaitoDB } from "./db";
-import { applyChanges, getMeta, setMeta, type ApplyDeps } from "./local";
+import { applyChanges, getMeta, notifyLocalChange, setMeta, type ApplyDeps } from "./local";
+import { pickDefaultTrip } from "./sync";
 import type { DayRow, StopRow, TripRow } from "./types";
 
 export const MAX_TRIP_DAYS = 60;
@@ -143,4 +144,44 @@ export async function exportTrip(db: PaitoDB, tripId: string): Promise<TripFile>
     db.trip_stops.where("trip_id").equals(tripId).toArray(),
   ]);
   return tripRowsToFile(trip, days, stops);
+}
+
+/**
+ * Delete a trip with its days and stops (D32). The server cascades from the
+ * trip row, so only one delete is queued; queued writes for this trip's rows
+ * are dropped (they would fail once the trip is gone). If it was the active
+ * trip, another one becomes active.
+ */
+export async function deleteTrip(deps: RepoDeps, tripId: string): Promise<void> {
+  const { db } = deps;
+  await db.transaction("rw", [db.trips, db.trip_days, db.trip_stops, db.outbox, db.meta], async () => {
+    const dayIds = (await db.trip_days.where("trip_id").equals(tripId).primaryKeys()) as string[];
+    const stopIds = (await db.trip_stops.where("trip_id").equals(tripId).primaryKeys()) as string[];
+    const owned = new Set([tripId, ...dayIds, ...stopIds]);
+
+    const stale = (await db.outbox.toArray()).filter((op) => op.rowIds.every((id) => owned.has(id)));
+    await db.outbox.bulkDelete(stale.map((op) => op.seq!));
+
+    await db.trip_stops.bulkDelete(stopIds);
+    await db.trip_days.bulkDelete(dayIds);
+    await db.trips.delete(tripId);
+    await db.outbox.add({
+      id: deps.newId(),
+      table: "trips",
+      op: "delete",
+      rows: [{ id: tripId }],
+      rowIds: [tripId],
+      createdAt: deps.nowIso(),
+      attempts: 0,
+      lastError: null,
+      status: "pending",
+    });
+
+    if ((await getMeta<string>(db, "activeTripId")) === tripId) {
+      const next = pickDefaultTrip(await db.trips.toArray(), deps.nowIso().slice(0, 10));
+      if (next) await setMeta(db, "activeTripId", next.id);
+      else await db.meta.delete("activeTripId");
+    }
+  });
+  notifyLocalChange();
 }

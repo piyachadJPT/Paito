@@ -7,7 +7,7 @@ import { iso, rawSeed } from "@/test/seed";
 import { PaitoDB } from "./db";
 import { applyChanges, clearLocal, getMeta, onLocalChange, setMeta } from "./local";
 import { classifyRemoteError, type FetchAllResult, type RemoteClient, type RemoteResult } from "./remote";
-import { createTrip, exportTrip, getActiveTripId, importTrip, setActiveTrip, updateTrip, type RepoDeps } from "./repo";
+import { createTrip, deleteTrip, exportTrip, getActiveTripId, importTrip, setActiveTrip, updateTrip, type RepoDeps } from "./repo";
 import { PULL_MIN_INTERVAL_MS, SyncEngine, mergeRemote, pickDefaultTrip } from "./sync";
 import type { SyncedTable, TripRow } from "./types";
 
@@ -192,6 +192,33 @@ describe("repositories", () => {
     const pick = (s: (typeof copy)[number]) => [s.name, s.status, s.planned_arrival_at, s.planned_departure_at, s.is_fixed, s.latitude, s.maps_url, s.started_at];
     expect(copy.map(pick).sort()).toEqual(original.map(pick).sort());
     await expect(exportTrip(db, "missing")).rejects.toThrow();
+  });
+
+  it("deleteTrip: removes the trip, its days and stops, drops its queued writes, queues one delete", async () => {
+    const keep = await createTrip(deps(), { name: "เก็บไว้", start_date: "2027-03-01", end_date: "2027-03-01" });
+    const gone = await importTrip(deps(), seedFile()); // active now, writes still queued
+    await deleteTrip(deps(), gone);
+
+    expect(await db.trips.get(gone)).toBeUndefined();
+    expect(await db.trip_days.where("trip_id").equals(gone).count()).toBe(0);
+    expect(await db.trip_stops.where("trip_id").equals(gone).count()).toBe(0);
+    const ops = await db.outbox.orderBy("seq").toArray();
+    expect(ops.filter((o) => o.rowIds.includes(gone) && o.op === "upsert")).toEqual([]);
+    expect(ops[ops.length - 1]).toMatchObject({ table: "trips", op: "delete", rowIds: [gone] });
+    expect(ops.filter((o) => o.rowIds.includes(keep))).toHaveLength(1); // the other trip's writes stay
+    expect(await getActiveTripId(db)).toBe(keep);
+  });
+
+  it("deleteTrip of the last trip clears the active trip; sync sends the delete", async () => {
+    const id = await createTrip(deps(), { name: "x", start_date: "2027-02-01", end_date: "2027-02-01" });
+    const remote = new FakeRemote();
+    const { e } = engine(remote);
+    await e.sync({ pull: false });
+    await deleteTrip(deps(), id);
+    expect(await getActiveTripId(db)).toBeUndefined();
+    await e.sync({ pull: false });
+    expect(remote.calls[remote.calls.length - 1]).toBe("delete:trips:1");
+    expect(remote.tables.trips.size).toBe(0);
   });
 
   it("setActiveTrip / clearLocal", async () => {

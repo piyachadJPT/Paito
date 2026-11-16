@@ -24,6 +24,12 @@ describe("applyStatusAction", () => {
     expect(r.snapshot).toEqual([temple]);
   });
 
+  it("records times to the whole minute (D33)", () => {
+    const { stops, day1, temple } = setup();
+    const r = ok(applyStatusAction(day1, stops, temple.id, "arrive", NOW + 42_123));
+    expect(r.updates[0].started_at).toBe(iso("2026-12-31T09:30"));
+  });
+
   it("arriving at the last lodging of the day completes it right away", () => {
     const { stops, day1, lastLodging } = setup();
     const r = ok(applyStatusAction(day1, stops, lastLodging.id, "arrive", NOW));

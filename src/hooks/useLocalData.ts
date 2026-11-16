@@ -36,13 +36,20 @@ export function useTripExport(tripId: string | null | undefined) {
   return useLiveQuery(async () => (tripId ? exportTrip(db, tripId).catch(() => null) : null), [tripId]);
 }
 
+/**
+ * useLiveQuery keeps returning the previous result while a query with new
+ * deps runs; tag results with their trip id so a stale list (e.g. [] from
+ * "no trip yet") is never shown as the new trip's data.
+ */
+function useForTrip<T>(tripId: string | null | undefined, query: (tripId: string) => Promise<T[]>): T[] | undefined {
+  const result = useLiveQuery(async () => ({ tripId: tripId ?? null, rows: tripId ? await query(tripId) : [] }), [tripId]);
+  return result && result.tripId === (tripId ?? null) ? result.rows : undefined;
+}
+
 export function useTripDays(tripId: string | null | undefined) {
-  return useLiveQuery(
-    async () => (tripId ? (await db.trip_days.where("trip_id").equals(tripId).toArray()).sort((a, b) => a.day_number - b.day_number) : []),
-    [tripId],
-  );
+  return useForTrip(tripId, async (id) => (await db.trip_days.where("trip_id").equals(id).toArray()).sort((a, b) => a.day_number - b.day_number));
 }
 
 export function useTripStops(tripId: string | null | undefined) {
-  return useLiveQuery(async () => (tripId ? db.trip_stops.where("trip_id").equals(tripId).toArray() : []), [tripId]);
+  return useForTrip(tripId, (id) => db.trip_stops.where("trip_id").equals(id).toArray());
 }

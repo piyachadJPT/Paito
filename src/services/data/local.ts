@@ -12,6 +12,11 @@ export function onLocalChange(listener: Listener): () => void {
   };
 }
 
+/** Tell listeners (sync, auth gate) that local data changed outside applyChanges. */
+export function notifyLocalChange(): void {
+  listeners.forEach((l) => l());
+}
+
 export interface ApplyDeps {
   newId: () => string;
   nowIso: () => string;

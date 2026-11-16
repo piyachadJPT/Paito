@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CalendarDays, Navigation, Settings, type LucideIcon } from "lucide-react";
+import { useNowState } from "@/hooks/useNowState";
 
 interface Tab {
   href: "/" | "/plan" | "/settings";
@@ -23,6 +24,8 @@ function isActive(pathname: string, href: Tab["href"]) {
 /** Floating pill tab bar, sitting just above the iOS home indicator. */
 export function TabBar() {
   const pathname = usePathname();
+  // Orange dot on "ตอนนี้" while an alert is waiting (SPEC §6, §10.2)
+  const hasAlert = (useNowState().state?.alerts.length ?? 0) > 0;
 
   return (
     <nav
@@ -41,8 +44,16 @@ export function TabBar() {
                   active ? "bg-primary-soft text-primary" : "text-ink-2 active:bg-card-sunken"
                 }`}
               >
-                <Icon aria-hidden size={22} strokeWidth={active ? 2.4 : 2} />
-                <span>{label}</span>
+                <span className="relative">
+                  <Icon aria-hidden size={22} strokeWidth={active ? 2.4 : 2} />
+                  {href === "/" && hasAlert && (
+                    <span className="absolute -top-0.5 -right-1 size-2.5 rounded-full bg-warning ring-2 ring-bar-solid" />
+                  )}
+                </span>
+                <span>
+                  {label}
+                  {href === "/" && hasAlert && <span className="sr-only"> (มีการเตือน)</span>}
+                </span>
               </Link>
             </li>
           );

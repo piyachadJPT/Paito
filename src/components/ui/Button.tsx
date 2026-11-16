@@ -16,6 +16,11 @@ const SIZES: Record<Size, string> = {
   md: "min-h-11 rounded-xl px-4 text-[15px]", // ≥ 44px tap target
 };
 
+/** Same look for <a> (e.g. Google Maps links) as for <button>. */
+export function buttonClasses(variant: Variant = "primary", size: Size = "lg", extra = ""): string {
+  return `inline-flex select-none items-center justify-center gap-2 font-semibold disabled:cursor-not-allowed ${VARIANTS[variant]} ${SIZES[size]} ${extra}`;
+}
+
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: Size;
@@ -39,7 +44,7 @@ export function Button({
       type={type}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
-      className={`inline-flex select-none items-center justify-center gap-2 font-semibold disabled:cursor-not-allowed ${VARIANTS[variant]} ${SIZES[size]} ${className}`}
+      className={buttonClasses(variant, size, className)}
       {...rest}
     >
       {loading ? <LoaderCircle aria-hidden size={20} className="animate-spin" /> : icon}

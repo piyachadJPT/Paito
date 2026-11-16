@@ -1,4 +1,4 @@
-import type { ScheduleStop, StopStatus } from "./types";
+import { MINUTE, type ScheduleStop, type StopStatus } from "./types";
 import { toIso } from "./util";
 
 export type StatusAction = "arrive" | "complete" | "skip" | "revert";
@@ -56,7 +56,8 @@ export function applyStatusAction<T extends ScheduleStop>(
   if (index < 0) throw new Error(`Stop ${stopId} is not in this day`);
   if (index === 0) throw new Error("The origin has no status");
   const stop = dayStops[index];
-  const at = toIso(now);
+  // D33: recorded to the whole minute, so "started 09:30" means 09:30:00 everywhere
+  const at = toIso(Math.floor(now / MINUTE) * MINUTE);
 
   const invalid = () => new Error(`Cannot ${action} a stop that is ${stop.status}`);
   const updates: T[] = [];

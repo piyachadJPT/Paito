@@ -1,12 +1,14 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/Button";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Section } from "@/components/ui/PageHeader";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { TextArea } from "@/components/ui/TextArea";
 import { formatCalendarDate } from "@/lib/time";
-import { updateTrip } from "@/services/data/repo";
+import { deleteTrip, updateTrip } from "@/services/data/repo";
 import { useRepoDeps } from "@/services/data/SyncProvider";
 import type { TripRow } from "@/services/data/types";
 
@@ -15,6 +17,19 @@ const ALERT_OPTIONS = [5, 10, 15, 20, 30].map((m) => ({ value: m, label: `${m}` 
 /** Active trip: read-only facts, important info (note) and alert lead time. */
 export function TripSettings({ trip }: { trip: TripRow }) {
   const repo = useRepoDeps();
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  async function onDelete() {
+    if (!repo) return;
+    setDeleting(true);
+    try {
+      await deleteTrip(repo, trip.id);
+    } finally {
+      setDeleting(false);
+      setConfirmDelete(false);
+    }
+  }
 
   return (
     <>
@@ -24,7 +39,30 @@ export function TripSettings({ trip }: { trip: TripRow }) {
           <Row label="ช่วงวันที่" value={`${formatCalendarDate(trip.start_date)} – ${formatCalendarDate(trip.end_date)}`} />
           <Row label="เขตเวลา" value={trip.timezone} />
         </dl>
+        <div className="border-t border-line p-2">
+          <Button
+            variant="danger"
+            size="md"
+            className="w-full"
+            icon={<Trash2 aria-hidden size={18} />}
+            disabled={!repo}
+            onClick={() => setConfirmDelete(true)}
+          >
+            ลบทริปนี้
+          </Button>
+        </div>
       </Section>
+
+      <ConfirmDialog
+        open={confirmDelete}
+        title={`ลบ “${trip.name}”?`}
+        message="วันและสถานที่ทั้งหมดของทริปนี้จะถูกลบทั้งในเครื่องและในบัญชี ย้อนกลับไม่ได้ ถ้าอยากเก็บไว้ กด “ส่งออกทริปนี้” ก่อน"
+        confirmLabel="ลบทริป"
+        destructive
+        busy={deleting}
+        onConfirm={() => void onDelete()}
+        onCancel={() => setConfirmDelete(false)}
+      />
 
       <Section title="ข้อมูลสำคัญ" footer="เลขจอง เบอร์โทรที่พัก ประกันรถ — เปิดดูได้จากหน้า “ตอนนี้” แม้ไม่มีสัญญาณ">
         <div className="p-3">

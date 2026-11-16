@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import "fake-indexeddb/auto";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { parseTripFile } from "@/lib/import/import-schema";
 import { db } from "@/services/data/db";
@@ -60,5 +60,19 @@ describe("SettingsScreen", () => {
 
     fireEvent.click(screen.getByRole("radio", { name: "20" }));
     await waitFor(async () => expect((await db.trips.toArray())[0].departure_alert_minutes).toBe(20));
+  });
+
+  it("deletes the active trip after confirming", async () => {
+    const parsed = parseTripFile(rawSeed);
+    if (!parsed.ok) throw new Error();
+    await importTrip(repo(), parsed.file);
+
+    render(<SettingsScreen />);
+    fireEvent.click(await screen.findByRole("button", { name: "ลบทริปนี้" }));
+    const dialog = await screen.findByRole("dialog", { name: "ลบ “ทริปปีใหม่ ลำปาง–เชียงราย”?" });
+    expect(await db.trips.count()).toBe(1); // nothing deleted before confirming
+    fireEvent.click(within(dialog).getByRole("button", { name: "ลบทริป" }));
+    await waitFor(async () => expect(await db.trips.count()).toBe(0));
+    expect(await screen.findByText("ยังไม่มีทริป")).toBeTruthy();
   });
 });
