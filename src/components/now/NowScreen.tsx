@@ -159,6 +159,10 @@ export function NowScreen() {
 
       {/* 7. today's list */}
       {state.day && <TodayList stops={state.dayStops} dayNumber={state.day.day_number} timeZone={tz} />}
+      {/* D43: before the trip, preview the first day's places */}
+      {state.kind === "before_trip" && state.firstDay && (
+        <TodayList stops={getDayStops(stops, state.firstDay.id)} dayNumber={state.firstDay.day_number} timeZone={tz} title="แผนวันแรก" />
+      )}
 
       <ShiftSheet request={shift} dayStops={state.dayStops} timeZone={tz} onClose={() => setShift(null)} />
       <ConfirmDialog

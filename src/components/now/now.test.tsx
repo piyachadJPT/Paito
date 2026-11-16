@@ -58,6 +58,15 @@ describe("NowScreen (seed + simulated clock)", () => {
     expect(card.textContent).toContain("Day 1 ออก 08:00 น. จาก บ้าน (ลำพูน)");
   });
 
+  it("before the trip → lists the places of the first day", async () => {
+    await renderAt("2026-11-20T10:00");
+    const heading = await screen.findByRole("heading", { name: "แผนวันแรก" });
+    const list = heading.closest("section")!;
+    expect(list.textContent).toContain("วัดพระธาตุลำปางหลวง");
+    expect(list.textContent).toContain("11:20");
+    expect(within(list).getByRole("link", { name: "ดูทั้งหมด" }).getAttribute("href")).toBe("/plan?day=1");
+  });
+
   it("07:50 → pre_departure with a departure alert that can be dismissed", async () => {
     await renderAt("2026-12-31T07:50");
     const alert = await screen.findByRole("alert");

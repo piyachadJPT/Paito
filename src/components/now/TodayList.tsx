@@ -9,7 +9,18 @@ import type { StopRow } from "@/services/data/types";
  * with type icons as pins; finished places get a red strike and a time stamp.
  * Every status is also written in words. May sit below the fold.
  */
-export function TodayList({ stops, dayNumber, timeZone }: { stops: StopRow[]; dayNumber: number; timeZone: string }) {
+export function TodayList({
+  stops,
+  dayNumber,
+  timeZone,
+  title = "แผนของวันนี้",
+}: {
+  stops: StopRow[];
+  dayNumber: number;
+  timeZone: string;
+  /** "แผนวันแรก" before the trip (D43) */
+  title?: string;
+}) {
   if (stops.length === 0) return null;
   const hm = (ms: string | null) => (ms ? formatTime(ms, timeZone).replace(" น.", "") : "—");
 
@@ -17,7 +28,7 @@ export function TodayList({ stops, dayNumber, timeZone }: { stops: StopRow[]; da
     <section aria-labelledby="today-heading" className="mt-5">
       <div className="mb-1 flex items-baseline justify-between px-1">
         <h2 id="today-heading" className="font-hand text-[19px] font-bold">
-          แผนของวันนี้
+          {title}
         </h2>
         <Link href={`/plan?day=${dayNumber}`} className="inline-flex min-h-11 items-center px-2 text-[14px] font-semibold text-primary">
           ดูทั้งหมด
