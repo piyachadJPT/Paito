@@ -1,0 +1,279 @@
+{
+  "version": 1,
+  "_notes": [
+    "เวลา ระยะเวลา และเวลาขับทั้งหมดเป็นร่างประมาณการ ต้องตรวจกับ Google Maps และเวลาเปิด-ปิดจริงก่อนเดินทาง",
+    "ฟิลด์ที่ขึ้นต้นด้วย _ เป็นคำอธิบาย ระบบนำเข้าต้องข้าม · _expect_* คือเวลาที่ควรได้หลังคำนวณ ใช้ตรวจ import ใน unit test",
+    "เวลาทั้งหมดเป็นเวลาท้องถิ่นของทริป (Asia/Bangkok) ไม่มี offset",
+    "ที่พักยังไม่ระบุชื่อ ให้ใส่ลิงก์ Google Maps และเลขจองจริงภายหลัง",
+    "ยังไม่มีมื้อกลางวันของวันที่ 1, 2 และ 4 เพิ่มในแอปได้"
+  ],
+  "trip": {
+    "name": "ทริปปีใหม่ ลำปาง–เชียงราย",
+    "start_date": "2026-12-31",
+    "end_date": "2027-01-03",
+    "timezone": "Asia/Bangkok",
+    "day_cutoff_hour": 4,
+    "departure_alert_minutes": 15,
+    "note": "ที่พักลำปาง: (ชื่อ / เลขจอง / เบอร์โทร)\nที่พักเชียงราย: (ชื่อ / เลขจอง / เบอร์โทร)\nประกันรถ / ช่วยเหลือฉุกเฉิน: (เบอร์โทร)"
+  },
+  "days": [
+    {
+      "day_number": 1,
+      "date": "2026-12-31",
+      "title": "ลำพูน → ลำปาง · เที่ยวเมืองลำปาง + ส่งท้ายปีเก่า",
+      "stops": [
+        {
+          "name": "บ้าน (ลำพูน)",
+          "type": "lodging",
+          "maps_query": "ลำพูน",
+          "depart_at": "2026-12-31T08:00",
+          "note": "ใส่ลิงก์ Google Maps ของบ้านจริง",
+          "_expect_depart": "2026-12-31T08:00"
+        },
+        {
+          "name": "วัดพระธาตุลำปางหลวง",
+          "type": "sight",
+          "maps_query": "วัดพระธาตุลำปางหลวง ลำปาง",
+          "travel_minutes": 80,
+          "duration_minutes": 90,
+          "_expect_arrive": "2026-12-31T09:20",
+          "_expect_depart": "2026-12-31T10:50"
+        },
+        {
+          "name": "พิพิธภัณฑ์เซรามิคธนบดี",
+          "type": "sight",
+          "maps_query": "พิพิธภัณฑ์เซรามิคธนบดี ลำปาง",
+          "travel_minutes": 30,
+          "duration_minutes": 75,
+          "_expect_arrive": "2026-12-31T11:20",
+          "_expect_depart": "2026-12-31T12:35"
+        },
+        {
+          "name": "วัดศรีรองเมือง",
+          "type": "sight",
+          "maps_query": "วัดศรีรองเมือง ลำปาง",
+          "travel_minutes": 15,
+          "duration_minutes": 45,
+          "_expect_arrive": "2026-12-31T12:50",
+          "_expect_depart": "2026-12-31T13:35"
+        },
+        {
+          "name": "สะพานรัษฎาภิเศก",
+          "type": "sight",
+          "maps_query": "สะพานรัษฎาภิเศก ลำปาง",
+          "travel_minutes": 10,
+          "duration_minutes": 30,
+          "_expect_arrive": "2026-12-31T13:45",
+          "_expect_depart": "2026-12-31T14:15"
+        },
+        {
+          "name": "ที่พักลำปาง (เช็กอิน + พักก่อนงานกลางคืน)",
+          "type": "lodging",
+          "maps_query": "ลำปาง",
+          "travel_minutes": 10,
+          "duration_minutes": 240,
+          "note": "ใส่ชื่อและลิงก์ที่พักจริง",
+          "_expect_arrive": "2026-12-31T14:25",
+          "_expect_depart": "2026-12-31T18:25"
+        },
+        {
+          "name": "Lampang Festival — สวนสาธารณะหนองกระทิง",
+          "type": "sight",
+          "maps_query": "สวนสาธารณะหนองกระทิง ลำปาง",
+          "travel_minutes": 15,
+          "duration_minutes": 330,
+          "fixed_arrive_at": "2026-12-31T19:00",
+          "note": "กิจกรรมส่งท้ายปี + เคานต์ดาวน์ 00:00 · ตรวจเวลางานจริง",
+          "_comment": "คำนวณได้ 18:40 แต่ล็อกไว้ 19:00 จึงต้องได้ gap 20 นาที และเวลาออกข้ามเที่ยงคืน",
+          "_expect_arrive": "2026-12-31T19:00",
+          "_expect_depart": "2027-01-01T00:30"
+        },
+        {
+          "name": "ที่พักลำปาง",
+          "type": "lodging",
+          "maps_query": "ลำปาง",
+          "travel_minutes": 15,
+          "duration_minutes": 0,
+          "_comment": "ถึง 00:45 ของ 1 ม.ค. แต่ยังนับเป็น Day 1 (ตัดรอบตี 4)",
+          "_expect_arrive": "2027-01-01T00:45",
+          "_expect_depart": "2027-01-01T00:45"
+        }
+      ]
+    },
+    {
+      "day_number": 2,
+      "date": "2027-01-01",
+      "title": "ลำปาง · วันปีใหม่ + เที่ยวธรรมชาติ",
+      "stops": [
+        {
+          "name": "ที่พักลำปาง",
+          "type": "lodging",
+          "maps_query": "ลำปาง",
+          "depart_at": "2027-01-01T09:30",
+          "_expect_depart": "2027-01-01T09:30"
+        },
+        {
+          "name": "อุทยานแห่งชาติแจ้ซ้อน",
+          "type": "sight",
+          "maps_query": "อุทยานแห่งชาติแจ้ซ้อน ลำปาง",
+          "travel_minutes": 75,
+          "duration_minutes": 45,
+          "_expect_arrive": "2027-01-01T10:45",
+          "_expect_depart": "2027-01-01T11:30"
+        },
+        {
+          "name": "บ่อน้ำพุร้อนแจ้ซ้อน",
+          "type": "sight",
+          "maps_query": "บ่อน้ำพุร้อนแจ้ซ้อน ลำปาง",
+          "travel_minutes": 5,
+          "duration_minutes": 90,
+          "_expect_arrive": "2027-01-01T11:35",
+          "_expect_depart": "2027-01-01T13:05"
+        },
+        {
+          "name": "น้ำตกแจ้ซ้อน",
+          "type": "sight",
+          "maps_query": "น้ำตกแจ้ซ้อน ลำปาง",
+          "travel_minutes": 10,
+          "duration_minutes": 60,
+          "_expect_arrive": "2027-01-01T13:15",
+          "_expect_depart": "2027-01-01T14:15"
+        },
+        {
+          "name": "ที่พักลำปาง (พักผ่อน)",
+          "type": "lodging",
+          "maps_query": "ลำปาง",
+          "travel_minutes": 75,
+          "duration_minutes": 120,
+          "_expect_arrive": "2027-01-01T15:30",
+          "_expect_depart": "2027-01-01T17:30"
+        },
+        {
+          "name": "ถนนคนเดินสายวัฒนธรรม",
+          "type": "sight",
+          "maps_query": "ถนนคนเดินสายวัฒนธรรม ลำปาง",
+          "travel_minutes": 15,
+          "duration_minutes": 120,
+          "note": "จัดเฉพาะบางวัน · 1 ม.ค. 2570 ตรงกับวันศุกร์ ตรวจก่อนว่ามีงานไหม ถ้าไม่มีให้กดข้าม",
+          "_expect_arrive": "2027-01-01T17:45",
+          "_expect_depart": "2027-01-01T19:45"
+        },
+        {
+          "name": "ที่พักลำปาง",
+          "type": "lodging",
+          "maps_query": "ลำปาง",
+          "travel_minutes": 15,
+          "duration_minutes": 0,
+          "_expect_arrive": "2027-01-01T20:00",
+          "_expect_depart": "2027-01-01T20:00"
+        }
+      ]
+    },
+    {
+      "day_number": 3,
+      "date": "2027-01-02",
+      "title": "ลำปาง → เชียงราย · วัดสวย + ธรรมชาติ + ตลาดกลางคืน",
+      "stops": [
+        {
+          "name": "ที่พักลำปาง",
+          "type": "lodging",
+          "maps_query": "ลำปาง",
+          "depart_at": "2027-01-02T07:30",
+          "note": "ขาขับยาวที่สุดของทริป เช็กน้ำมันก่อนออก",
+          "_expect_depart": "2027-01-02T07:30"
+        },
+        {
+          "name": "วัดร่องขุ่น",
+          "type": "sight",
+          "maps_query": "วัดร่องขุ่น เชียงราย",
+          "travel_minutes": 210,
+          "duration_minutes": 90,
+          "note": "แวะพักระหว่างทางได้ (เพิ่ม stop ประเภทจุดแวะพัก)",
+          "_expect_arrive": "2027-01-02T11:00",
+          "_expect_depart": "2027-01-02T12:30"
+        },
+        {
+          "name": "สิงห์ปาร์ค เชียงราย",
+          "type": "sight",
+          "maps_query": "สิงห์ปาร์ค เชียงราย",
+          "travel_minutes": 20,
+          "duration_minutes": 150,
+          "note": "กินมื้อกลางวันที่นี่",
+          "_expect_arrive": "2027-01-02T12:50",
+          "_expect_depart": "2027-01-02T15:20"
+        },
+        {
+          "name": "วัดร่องเสือเต้น (วัดสีน้ำเงิน)",
+          "type": "sight",
+          "maps_query": "วัดร่องเสือเต้น เชียงราย",
+          "travel_minutes": 25,
+          "duration_minutes": 60,
+          "_expect_arrive": "2027-01-02T15:45",
+          "_expect_depart": "2027-01-02T16:45"
+        },
+        {
+          "name": "ที่พักเชียงราย (เช็กอิน)",
+          "type": "lodging",
+          "maps_query": "เชียงราย",
+          "travel_minutes": 15,
+          "duration_minutes": 75,
+          "note": "ใส่ชื่อและลิงก์ที่พักจริง",
+          "_expect_arrive": "2027-01-02T17:00",
+          "_expect_depart": "2027-01-02T18:15"
+        },
+        {
+          "name": "เชียงรายไนท์บาซาร์",
+          "type": "food",
+          "maps_query": "เชียงรายไนท์บาซาร์",
+          "travel_minutes": 10,
+          "duration_minutes": 120,
+          "note": "ตลาดกลางคืน + มื้อเย็น",
+          "_expect_arrive": "2027-01-02T18:25",
+          "_expect_depart": "2027-01-02T20:25"
+        },
+        {
+          "name": "ที่พักเชียงราย",
+          "type": "lodging",
+          "maps_query": "เชียงราย",
+          "travel_minutes": 10,
+          "duration_minutes": 0,
+          "_expect_arrive": "2027-01-02T20:35",
+          "_expect_depart": "2027-01-02T20:35"
+        }
+      ]
+    },
+    {
+      "day_number": 4,
+      "date": "2027-01-03",
+      "title": "เชียงราย → ลำพูน · ไหว้พระก่อนเดินทางกลับ",
+      "stops": [
+        {
+          "name": "ที่พักเชียงราย",
+          "type": "lodging",
+          "maps_query": "เชียงราย",
+          "depart_at": "2027-01-03T08:30",
+          "_expect_depart": "2027-01-03T08:30"
+        },
+        {
+          "name": "วัดห้วยปลากั้ง",
+          "type": "sight",
+          "maps_query": "วัดห้วยปลากั้ง เชียงราย",
+          "travel_minutes": 20,
+          "duration_minutes": 90,
+          "_expect_arrive": "2027-01-03T08:50",
+          "_expect_depart": "2027-01-03T10:20"
+        },
+        {
+          "name": "บ้าน (ลำพูน)",
+          "type": "lodging",
+          "maps_query": "ลำพูน",
+          "travel_minutes": 210,
+          "duration_minutes": 0,
+          "note": "ใส่ลิงก์ Google Maps ของบ้านจริง",
+          "_expect_arrive": "2027-01-03T13:50",
+          "_expect_depart": "2027-01-03T13:50"
+        }
+      ]
+    }
+  ]
+}
