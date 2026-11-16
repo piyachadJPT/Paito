@@ -1,9 +1,10 @@
 "use client";
 
-import { ArrowRight, TriangleAlert } from "lucide-react";
 import { useMemo, useState } from "react";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/Button";
+import { HandIcon } from "@/components/ui/icons";
+import { PaperNote } from "@/components/ui/PaperNote";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Stepper } from "@/components/ui/Stepper";
 import { useToast } from "@/components/ui/Toast";
@@ -108,29 +109,32 @@ function ShiftBody({
         </>
       )}
 
-      <div className="rounded-2xl bg-card-sunken p-4">
-        <p className="text-[13px] font-semibold text-ink-2">ถ้าเลื่อน{shiftMinutes > 0 ? ` ${formatMinutes(shiftMinutes)}` : ""}</p>
+      {/* preview as a ticket: new times in blue ink, the old one struck out in red */}
+      <div className="relative rounded-[6px] border-[1.5px] border-dashed border-line-strong p-4">
+        <p className="font-hand text-[17px] font-bold text-ink-2">ถ้าเลื่อน{shiftMinutes > 0 ? ` ${formatMinutes(shiftMinutes)}` : ""}</p>
         <p className="mt-1 text-[15px]">
-          ออกจาก {request.anchor.name} <span className="font-semibold tabular-nums">{anchorDeparture ? formatTime(anchorDeparture, timeZone) : "—"}</span>
+          ออกจาก {request.anchor.name} <span className="font-semibold text-primary tabular-nums">{anchorDeparture ? formatTime(anchorDeparture, timeZone) : "—"}</span>
         </p>
         {lastStop && (
-          <p className="mt-2 flex flex-wrap items-center gap-x-1.5 text-[17px] font-semibold tabular-nums">
-            ถึง {lastStop.name} {t(lastStop.arrivalAt)}
+          <p className="mt-2 flex flex-wrap items-center gap-x-1.5 border-t border-dashed border-line-strong pt-2 text-[17px] font-semibold tabular-nums">
+            ถึง {lastStop.name} <span className="text-primary">{t(lastStop.arrivalAt)}</span>
             {lastStop.arrivalAt !== lastStop.previousArrivalAt && (
               <span className="inline-flex items-center gap-1 text-[14px] font-normal text-ink-2">
-                <ArrowRight aria-hidden size={13} />
-                เดิม {t(lastStop.previousArrivalAt)}
+                <HandIcon name="navigate" size={13} className="rotate-45" />
+                เดิม <span className="line-through decoration-ink-red/70 decoration-2">{t(lastStop.previousArrivalAt)}</span>
               </span>
             )}
           </p>
         )}
         {conflicts.map((c) => (
-          <p key={c.stopId} className="mt-2 flex items-start gap-1.5 text-[14px] font-semibold text-warning-ink">
-            <TriangleAlert aria-hidden size={16} className="mt-0.5 shrink-0" />
-            จะถึง {c.name} ช้ากว่าเวลาที่ล็อกไว้ {formatMinutes(c.lateMinutes)}
-          </p>
+          <PaperNote key={c.stopId} className="mt-3 flex items-start gap-1.5 px-3 py-2 text-[14px] font-semibold">
+            <HandIcon name="warning" size={17} className="mt-0.5" />
+            <span>
+              จะถึง {c.name} ช้ากว่าเวลาที่ล็อกไว้ {formatMinutes(c.lateMinutes)}
+            </span>
+          </PaperNote>
         ))}
-        <p className="mt-2 text-[13px] text-ink-2">จุดที่ล็อกเวลาไว้ไม่ขยับ · ไม่เลื่อนข้ามไปวันถัดไป</p>
+        <p className="mt-3 font-hand text-[14px] text-ink-2">จุดที่ล็อกเวลาไว้ไม่ขยับ · ไม่เลื่อนข้ามไปวันถัดไป</p>
       </div>
 
       <Button loading={busy} disabled={!repo || result.changed.length === 0} onClick={() => void confirm()}>

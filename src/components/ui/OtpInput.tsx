@@ -33,7 +33,7 @@ export const OtpInput = forwardRef<HTMLInputElement, OtpInputProps>(function Otp
 
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-[15px] font-semibold text-ink-2">
+      <label htmlFor={id} className="mb-2 block font-hand text-[16px] font-bold text-ink-2">
         {label}
       </label>
       <input
@@ -54,7 +54,7 @@ export const OtpInput = forwardRef<HTMLInputElement, OtpInputProps>(function Otp
         placeholder={"0".repeat(OTP_LENGTH)}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? errorId : undefined}
-        className={`block h-[72px] w-full rounded-2xl border bg-card text-center font-[family-name:var(--font-rounded)] text-[32px] font-bold tracking-[0.28em] text-ink tabular-nums outline-none placeholder:text-line-strong focus:border-primary focus:ring-4 focus:ring-primary-soft disabled:opacity-60 ${
+        className={`block h-[72px] w-full rounded-[8px] border-[1.5px] bg-card text-center font-[family-name:var(--font-rounded)] text-[32px] font-bold tracking-[0.28em] text-ink tabular-nums outline-none placeholder:text-line-strong focus:border-primary focus:ring-4 focus:ring-primary-soft disabled:opacity-60 ${
           error ? "border-warning" : "border-line-strong"
         }`}
         style={{ textIndent: "0.28em" }}

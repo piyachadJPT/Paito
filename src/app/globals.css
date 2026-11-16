@@ -1,100 +1,60 @@
 @import "tailwindcss";
 
 /*
- * Design tokens — see docs/SPEC.md §10.1 and "การตัดสินใจหลัง kickoff".
+ * Design tokens — see docs/SPEC.md §10.1 and §18 (U9–U11).
+ * Light "travel journal" theme only (no dark mode, U9).
  * Every color used in the UI must come from these variables.
  */
 :root {
   color-scheme: light;
 
-  /* Surfaces */
-  --canvas: #f4f1ea; /* warm paper */
-  --card: #fffefb;
-  --card-sunken: #ece8de;
-  --line: rgb(60 48 24 / 0.12);
-  --line-strong: rgb(60 48 24 / 0.22);
+  /* Surfaces: warm notebook paper, postcards a shade whiter */
+  --canvas: #efe7d6;
+  --card: #fffdf7;
+  --card-sunken: #e6dcc6;
+  --line: rgb(60 48 24 / 0.14);
+  --line-strong: rgb(60 48 24 / 0.26);
 
-  /* Text */
+  /* Text (contrast measured on --canvas) */
   --ink: #1c1a16;
-  --ink-2: #625d53;
-  --ink-3: #8f897d; /* 3.4:1 — large text, icons, decoration only */
+  --ink-2: #5e5747; /* 5.6:1 */
+  --ink-3: #8a7f68; /* decoration, icons, large text only */
 
-  /* Primary: highway-sign blue leaning green */
+  /* Primary: blue ink */
   --primary: #12608f;
-  --primary-pressed: #0d4c72;
-  --primary-soft: #dcebf3;
+  --primary-pressed: #0b4466;
+  --primary-soft: #d9e7ee;
   --on-primary: #ffffff;
+
+  /* Red stamp ink (postmarks, "done" strokes) */
+  --ink-red: #a8441f; /* 4.9:1 on paper */
 
   /* Status (always paired with text, never color alone) */
   --success: #2f7a4b;
-  --success-soft: #dff0e4;
+  --success-soft: #dcebd9;
   --warning: #ea580c; /* icons, borders, dots */
-  --warning-ink: #b4440b; /* text on light surfaces (≥ 4.5:1) */
-  --warning-soft: #fcebdd;
-  --neutral: #8f897d;
-  --neutral-soft: #ebe7de;
+  --warning-ink: #a63e0a; /* text on --warning-soft (≥ 4.5:1) */
+  --warning-soft: #fbe3cf;
+  --neutral: #8a7f68;
+  --neutral-soft: #e6dcc6;
 
   /* Stop types */
   --type-sight: #3d7a55;
   --type-food: #c2562f;
-  --type-rest: #8a8174;
+  --type-rest: #7d7262;
   --type-lodging: #7a4e8c;
 
   /* Floating tab bar */
-  --bar: rgb(255 254 251 / 0.78);
-  --bar-solid: #fffefb;
-  --shadow-float: 0 8px 24px rgb(40 30 10 / 0.12), 0 1px 3px rgb(40 30 10 / 0.08);
+  --bar: rgb(255 253 247 / 0.86);
+  --bar-solid: #fffdf7;
+  --shadow-float: 0 6px 18px rgb(60 40 10 / 0.16), 0 1px 2px rgb(60 40 10 / 0.1);
+  --shadow-card: 0 6px 16px rgb(60 40 10 / 0.16), 0 1px 2px rgb(60 40 10 / 0.12);
   --focus: #12608f;
 
-  /* Main card tint by time of day (U3) — text stays --ink on all of them */
-  --tint-morning: #e8f1f6;
-  --tint-day: #fffefb;
-  --tint-evening: #fbeadb;
-  --tint-night: #e5e7f2;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-
-    --canvas: #000000;
-    --card: #1c1c1e;
-    --card-sunken: #2c2c2e;
-    --line: rgb(255 255 255 / 0.1);
-    --line-strong: rgb(255 255 255 / 0.2);
-
-    --ink: #f5f3ee;
-    --ink-2: #aaa59b;
-    --ink-3: #78736a;
-
-    --primary: #6cb4e0;
-    --primary-pressed: #8cc6ea;
-    --primary-soft: rgb(108 180 224 / 0.16);
-    --on-primary: #04131d;
-
-    --success: #5cc08a;
-    --success-soft: rgb(92 192 138 / 0.16);
-    --warning: #fb923c;
-    --warning-ink: #fb923c;
-    --warning-soft: rgb(251 146 60 / 0.16);
-    --neutral: #8e8a82;
-    --neutral-soft: rgb(255 255 255 / 0.08);
-
-    --type-sight: #74c08f;
-    --type-food: #f08a62;
-    --type-rest: #b3aa9c;
-    --type-lodging: #c39ad6;
-
-    --bar: rgb(28 28 30 / 0.78);
-    --bar-solid: #1c1c1e;
-    --shadow-float: 0 8px 24px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(255 255 255 / 0.06);
-    --focus: #6cb4e0;
-
-    --tint-morning: #14212a;
-    --tint-day: #1c1c1e;
-    --tint-evening: #2a1f17;
-    --tint-night: #161a2b;
-  }
+  /* Paper texture: faint noise + ruled lines every 30px */
+  --paper-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .35 0 0 0 0 .2 0 0 0 .08 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  --paper-lines: repeating-linear-gradient(0deg, transparent 0 29px, rgb(110 90 50 / 0.12) 29px 30px);
 }
 
 @theme inline {
@@ -117,23 +77,23 @@
   --color-warning-soft: var(--warning-soft);
   --color-neutral: var(--neutral);
   --color-neutral-soft: var(--neutral-soft);
+  --color-ink-red: var(--ink-red);
   --color-type-sight: var(--type-sight);
   --color-type-food: var(--type-food);
   --color-type-rest: var(--type-rest);
   --color-type-lodging: var(--type-lodging);
   --color-bar: var(--bar);
   --color-bar-solid: var(--bar-solid);
-  --color-tint-morning: var(--tint-morning);
-  --color-tint-day: var(--tint-day);
-  --color-tint-evening: var(--tint-evening);
-  --color-tint-night: var(--tint-night);
 
   --font-sans: system-ui, -apple-system, "Helvetica Neue", sans-serif;
   /* Countdown numerals: SF Pro Rounded on Apple devices, system font elsewhere */
+  /* Handwriting (Mali, bundled) — headings, stamps, captions only; never times or alerts */
+  --font-hand: var(--font-mali), var(--font-sans);
   --font-rounded: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Helvetica Neue", sans-serif;
 
   --radius-card: 16px;
   --shadow-float: var(--shadow-float);
+  --shadow-card: var(--shadow-card);
 }
 
 @layer base {
@@ -146,7 +106,8 @@
 
   body {
     min-height: 100dvh;
-    background: var(--canvas);
+    background-color: var(--canvas);
+    background-image: var(--paper-noise), var(--paper-lines);
     color: var(--ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -173,6 +134,14 @@
   * {
     scrollbar-width: thin;
     scrollbar-color: var(--line-strong) transparent;
+  }
+}
+
+@layer components {
+  /* Red notebook margin line on the left (Now page) */
+  .paper-margin {
+    background-image: linear-gradient(90deg, transparent 13px, rgb(194 86 47 / 0.22) 13px, rgb(194 86 47 / 0.22) 14.5px, transparent 14.5px);
+    background-repeat: no-repeat;
   }
 }
 

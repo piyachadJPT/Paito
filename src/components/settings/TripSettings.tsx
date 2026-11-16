@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Trash2 } from "lucide-react";
+import { HandIcon } from "@/components/ui/icons";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
@@ -44,7 +44,7 @@ export function TripSettings({ trip }: { trip: TripRow }) {
             variant="danger"
             size="md"
             className="w-full"
-            icon={<Trash2 aria-hidden size={18} />}
+            icon={<HandIcon name="trash" size={20} />}
             disabled={!repo}
             onClick={() => setConfirmDelete(true)}
           >
@@ -134,7 +134,7 @@ function NoteEditor({ trip, disabled }: { trip: TripRow; disabled: boolean }) {
       <p aria-live="polite" className="mt-2 flex h-5 items-center gap-1 px-1 text-[13px] text-success">
         {saved && (
           <>
-            <Check aria-hidden size={14} strokeWidth={3} /> บันทึกในเครื่องแล้ว
+            <HandIcon name="check" size={15} strokeWidth={2.6} /> บันทึกในเครื่องแล้ว
           </>
         )}
       </p>

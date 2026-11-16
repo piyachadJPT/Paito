@@ -1,11 +1,8 @@
 "use client";
 
-import { Plus } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/Button";
-import { EmptyIllustration } from "@/components/ui/EmptyIllustration";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { useToast } from "@/components/ui/Toast";
 import { useActiveTrip, useTripDays, useTripStops } from "@/hooks/useLocalData";
@@ -17,6 +14,7 @@ import { getDayStops } from "@/lib/schedule/util";
 import { newStopRow, savePlanChange } from "@/services/data/plan-repo";
 import { useRepoDeps } from "@/services/data/SyncProvider";
 import type { DayRow, TripRow } from "@/services/data/types";
+import { PostcardScene } from "@/components/now/scene/PostcardScene";
 import { DayTabs } from "./DayTabs";
 import { DayTicket } from "./DayTicket";
 import { StopEditorSheet } from "./StopEditorSheet";
@@ -78,14 +76,14 @@ export function PlanScreen() {
     return (
       <div>
         <PageHeader title="แผนเที่ยว" />
-        <div className="mt-6 rounded-[var(--radius-card)] border border-line bg-card px-5 py-6 text-center">
-          <EmptyIllustration className="mx-auto w-48" />
-          <h2 className="mt-4 text-[20px] font-bold">ยังไม่มีแผนเที่ยว</h2>
+        <section className="mt-6 -rotate-[1.2deg] bg-card p-2.5 pb-6 text-center shadow-[var(--shadow-card)]">
+          <PostcardScene scene={{ sky: "day", subject: "empty", extras: [] }} height={140} />
+          <h2 className="mt-4 font-hand text-[22px] font-bold">ยังไม่มีแผนเที่ยว</h2>
           <p className="mt-1 text-[15px] text-ink-2">สร้างทริปหรือนำเข้าไฟล์ในหน้าตั้งค่าก่อนนะ</p>
           <Link href="/settings" className="mt-4 inline-flex min-h-11 items-center rounded-xl px-4 font-semibold text-primary active:bg-primary-soft">
             ไปที่ตั้งค่า
           </Link>
-        </div>
+        </section>
       </div>
     );
   }
@@ -99,12 +97,19 @@ export function PlanScreen() {
 
       {day && (
         <>
-          <DayTicket day={day} stops={dayStops} timeZone={trip.timezone} />
+          <DayTicket day={day} stops={dayStops} timeZone={trip.timezone} totalDays={days.length} />
           <Timeline stops={dayStops} analysis={analysis} timeZone={trip.timezone} onOpen={(s) => setOpenStopId(s.id)} />
-          <div className="mt-3 pl-[80px]">
-            <Button variant="secondary" size="md" className="w-full" icon={<Plus aria-hidden size={18} />} disabled={!repo} onClick={() => void addStop()}>
+          {/* blank slip to write a new place on */}
+          <div className="mt-3 pl-[84px]">
+            <button
+              type="button"
+              disabled={!repo}
+              onClick={() => void addStop()}
+              className="flex min-h-12 w-full items-center justify-center gap-2 rounded-[6px] border-2 border-dashed border-line-strong font-hand text-[16px] font-bold text-primary active:bg-card-sunken disabled:text-ink-3"
+            >
+              <span aria-hidden className="text-[20px] leading-none">+</span>
               เพิ่มสถานที่
-            </Button>
+            </button>
           </div>
           <StopEditorSheet trip={trip} day={day} days={days} tripStops={stops ?? []} stopId={openStopId} onClose={() => setOpenStopId(null)} />
         </>
@@ -116,15 +121,15 @@ export function PlanScreen() {
 function PlanSkeleton() {
   return (
     <div aria-hidden>
-      <div className="mt-3 h-8 w-32 rounded-full bg-card-sunken" />
-      <div className="mt-5 flex gap-2">
+      <div className="mt-3 h-9 w-36 rounded-full bg-card-sunken" />
+      <div className="mt-5 flex gap-3">
         {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="h-12 w-20 rounded-2xl bg-card-sunken" />
+          <div key={i} className="h-12 w-20 rounded-[5px] bg-card-sunken" />
         ))}
       </div>
-      <div className="mt-3 h-36 rounded-[20px] bg-card-sunken" />
+      <div className="mt-4 h-40 rounded-[6px] bg-card-sunken" />
       {[0, 1, 2].map((i) => (
-        <div key={i} className="mt-3 ml-[80px] h-16 rounded-[var(--radius-card)] bg-card-sunken" />
+        <div key={i} className="mt-3 ml-[84px] h-16 rounded-[6px] bg-card-sunken" />
       ))}
     </div>
   );

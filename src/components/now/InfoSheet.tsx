@@ -1,9 +1,9 @@
 "use client";
 
-import { NotebookText, Phone } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { BottomSheet } from "@/components/ui/BottomSheet";
+import { HandIcon } from "@/components/ui/icons";
 import { splitPhones } from "@/lib/text/phone";
 
 /** "ข้อมูลสำคัญ" button + sheet with tappable phone numbers (SPEC §10.3 item 6). */
@@ -11,14 +11,19 @@ export function InfoButton({ note }: { note: string | null }) {
   const [open, setOpen] = useState(false);
   return (
     <>
+      {/* notebook index tab: coloured spine on the left, clipped corner top-right */}
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex min-h-14 w-full items-center gap-3 rounded-[var(--radius-card)] border border-line bg-card px-4 text-left active:bg-card-sunken"
+        className="flex min-h-14 w-full items-stretch overflow-hidden rounded-l-[6px] bg-card text-left shadow-[0_3px_10px_rgb(60_40_10/0.12)] [clip-path:polygon(0_0,calc(100%-14px)_0,100%_14px,100%_100%,0_100%)] active:bg-card-sunken focus-visible:outline-offset-[-3px]"
       >
-        <NotebookText aria-hidden size={20} className="shrink-0 text-primary" />
-        <span className="flex-1 text-[16px] font-semibold">ข้อมูลสำคัญ</span>
-        <span className="text-[13px] text-ink-2">เลขจอง · เบอร์โทร</span>
+        <span className="grid w-12 shrink-0 place-items-center bg-primary-soft text-primary">
+          <HandIcon name="notebook" size={22} />
+        </span>
+        <span className="flex flex-1 items-center gap-3 px-4">
+          <span className="flex-1 font-hand text-[17px] font-bold">ข้อมูลสำคัญ</span>
+          <span className="text-[13px] text-ink-2">เลขจอง · เบอร์โทร</span>
+        </span>
       </button>
       <BottomSheet open={open} title="ข้อมูลสำคัญ" onClose={() => setOpen(false)}>
         {note?.trim() ? (
@@ -30,7 +35,7 @@ export function InfoButton({ note }: { note: string | null }) {
                   href={`tel:${part.tel}`}
                   className="inline-flex items-center gap-1 rounded-lg px-1 font-semibold text-primary underline underline-offset-4"
                 >
-                  <Phone aria-hidden size={15} />
+                  <HandIcon name="phone" size={16} />
                   {part.text}
                 </a>
               ) : (

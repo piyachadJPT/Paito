@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDuration, formatMinutes } from "./format";
+import { formatDayOrdinal, formatDuration, formatMinutes, routeTitle } from "./format";
 
 const S = 1000;
 const M = 60 * S;
@@ -40,5 +40,29 @@ describe("formatMinutes", () => {
     expect(formatMinutes(0)).toBe("0 นาที");
     expect(formatMinutes(90)).toBe("1 ชม. 30 นาที");
     expect(formatMinutes(-3)).toBe("0 นาที");
+  });
+});
+
+describe("formatDayOrdinal", () => {
+  it.each([
+    [1, 4, "วันแรก"],
+    [2, 4, "วันที่ 2"],
+    [4, 4, "วันสุดท้าย"],
+    [1, 1, "วันแรก"],
+  ])("%i of %i → %s", (n, total, label) => {
+    expect(formatDayOrdinal(n, total)).toBe(label);
+  });
+});
+
+describe("routeTitle", () => {
+  it.each([
+    ["ลำพูน → ลำปาง · เที่ยวเมืองลำปาง + ส่งท้ายปีเก่า", "ลำพูน → ลำปาง"],
+    ["เชียงราย", "เชียงราย"],
+    [null, null],
+    [undefined, null],
+    [" · x", null],
+    ["", null],
+  ])("%s → %s", (title, route) => {
+    expect(routeTitle(title)).toBe(route);
   });
 });

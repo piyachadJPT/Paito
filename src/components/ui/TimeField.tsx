@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock } from "lucide-react";
+import { HandIcon } from "@/components/ui/icons";
 import { useId, useRef } from "react";
 
 export interface TimeFieldProps {
@@ -21,15 +21,15 @@ export function TimeField({ label, value, onChange, disabled, hint }: TimeFieldP
   const ref = useRef<HTMLInputElement>(null);
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-[15px] font-semibold text-ink-2">
+      <label htmlFor={id} className="mb-2 block font-hand text-[16px] font-bold text-ink-2">
         {label}
       </label>
       <div
-        className={`relative flex h-14 items-center gap-3 rounded-2xl border border-line-strong bg-card px-4 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary-soft ${
+        className={`relative flex h-14 items-center gap-3 rounded-[8px] border-[1.5px] border-line-strong bg-card px-4 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary-soft ${
           disabled ? "opacity-60" : ""
         }`}
       >
-        <Clock aria-hidden size={20} className="shrink-0 text-primary" />
+        <HandIcon name="now" size={22} className="text-primary" />
         <span aria-hidden className={`flex-1 text-[17px] tabular-nums ${value ? "text-ink" : "text-ink-3"}`}>
           {value ? `${value} น.` : "เลือกเวลา"}
         </span>

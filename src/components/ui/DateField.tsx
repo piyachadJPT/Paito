@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays } from "lucide-react";
+import { HandIcon } from "@/components/ui/icons";
 import { useId, useRef } from "react";
 import { formatCalendarDate } from "@/lib/time";
 
@@ -27,15 +27,15 @@ export function DateField({ label, value, onChange, min, max, disabled, error }:
 
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-[15px] font-semibold text-ink-2">
+      <label htmlFor={id} className="mb-2 block font-hand text-[16px] font-bold text-ink-2">
         {label}
       </label>
       <div
-        className={`relative flex h-14 items-center gap-3 rounded-2xl border bg-card px-4 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary-soft ${
+        className={`relative flex h-14 items-center gap-3 rounded-[8px] border-[1.5px] bg-card px-4 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary-soft ${
           error ? "border-warning" : "border-line-strong"
         } ${disabled ? "opacity-60" : ""}`}
       >
-        <CalendarDays aria-hidden size={20} className="shrink-0 text-primary" />
+        <HandIcon name="calendar" size={22} className="text-primary" />
         <span className={`flex-1 text-[17px] ${value ? "text-ink" : "text-ink-3"}`} aria-hidden>
           {value ? formatCalendarDate(value) : "เลือกวันที่"}
         </span>

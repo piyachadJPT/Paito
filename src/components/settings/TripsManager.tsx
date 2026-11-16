@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleCheck, Circle, Download, FileUp, Plus } from "lucide-react";
+import { HandIcon } from "@/components/ui/icons";
 import { useRef, useState } from "react";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/Button";
@@ -36,9 +36,11 @@ export function TripsManager({ trips, activeId }: { trips: TripRow[]; activeId: 
                   className="flex min-h-14 w-full items-center gap-3 px-4 py-2 text-left active:bg-card-sunken"
                 >
                   {checked ? (
-                    <CircleCheck aria-hidden size={22} className="shrink-0 text-primary" />
+                    <span aria-hidden className="grid size-6 shrink-0 place-items-center rounded-full bg-primary text-on-primary">
+                      <HandIcon name="check" size={15} strokeWidth={2.6} />
+                    </span>
                   ) : (
-                    <Circle aria-hidden size={22} className="shrink-0 text-ink-3" />
+                    <span aria-hidden className="size-6 shrink-0 rounded-full border-2 border-ink-3" />
                   )}
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-[17px] font-medium">{t.name}</span>
@@ -86,7 +88,7 @@ export function TripActions({ active, bordered = false }: { active: TripRow | nu
 
   return (
     <div className={`flex flex-col gap-2 p-3 ${bordered ? "border-t border-line" : ""}`}>
-      <Button variant="secondary" size="md" icon={<Plus aria-hidden size={18} />} disabled={!repo} onClick={() => setCreating(true)}>
+      <Button variant="secondary" size="md" icon={<HandIcon name="plus" size={20} />} disabled={!repo} onClick={() => setCreating(true)}>
         สร้างทริปใหม่
       </Button>
       <div className="flex gap-2">
@@ -94,7 +96,7 @@ export function TripActions({ active, bordered = false }: { active: TripRow | nu
           variant="secondary"
           size="md"
           className="flex-1"
-          icon={<FileUp aria-hidden size={18} />}
+          icon={<HandIcon name="upload" size={20} />}
           disabled={!repo}
           onClick={() => fileInput.current?.click()}
         >
@@ -104,7 +106,7 @@ export function TripActions({ active, bordered = false }: { active: TripRow | nu
           variant="secondary"
           size="md"
           className="flex-1"
-          icon={<Download aria-hidden size={18} />}
+          icon={<HandIcon name="download" size={20} />}
           disabled={!active || !exportFile}
           onClick={() => active && exportFile && shareOrDownload(exportFile, active)}
         >

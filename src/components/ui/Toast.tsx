@@ -1,6 +1,6 @@
 "use client";
 
-import { CircleCheck } from "lucide-react";
+import { HandIcon } from "@/components/ui/icons";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 export const TOAST_DURATION_MS = 8_000;
@@ -59,7 +59,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             role="status"
             className="pointer-events-auto mx-auto flex min-h-12 max-w-md items-center gap-3 rounded-2xl bg-ink py-1.5 pr-1.5 pl-4 text-[15px] text-canvas shadow-[var(--shadow-float)]"
           >
-            <CircleCheck aria-hidden size={18} className="shrink-0" />
+            <HandIcon name="check" size={20} />
             <span className="min-w-0 flex-1">{toast.message}</span>
             {toast.action && (
               <button

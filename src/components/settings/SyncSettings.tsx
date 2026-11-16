@@ -1,6 +1,6 @@
 "use client";
 
-import { RefreshCw, RotateCcw, Trash2 } from "lucide-react";
+import { HandIcon } from "@/components/ui/icons";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Section } from "@/components/ui/PageHeader";
@@ -50,10 +50,10 @@ export function SyncSettings({ timeZone = DEFAULT_TIMEZONE }: { timeZone?: strin
               </p>
               <p className="mt-0.5 text-[13px] break-words text-warning-ink">{op.lastError}</p>
               <div className="mt-2 flex gap-2">
-                <Button size="md" variant="secondary" icon={<RotateCcw aria-hidden size={16} />} disabled={!engine} onClick={() => engine && void engine.retry(op.id)}>
+                <Button size="md" variant="secondary" icon={<HandIcon name="undo" size={18} />} disabled={!engine} onClick={() => engine && void engine.retry(op.id)}>
                   ลองอีกครั้ง
                 </Button>
-                <Button size="md" variant="danger" icon={<Trash2 aria-hidden size={16} />} disabled={!engine} onClick={() => engine && void engine.discard(op.id)}>
+                <Button size="md" variant="danger" icon={<HandIcon name="trash" size={18} />} disabled={!engine} onClick={() => engine && void engine.discard(op.id)}>
                   ทิ้ง
                 </Button>
               </div>
@@ -67,7 +67,7 @@ export function SyncSettings({ timeZone = DEFAULT_TIMEZONE }: { timeZone?: strin
           variant="secondary"
           size="md"
           className="w-full"
-          icon={<RefreshCw aria-hidden size={18} />}
+          icon={<HandIcon name="refresh" size={20} />}
           loading={busy}
           disabled={!engine}
           onClick={async () => {

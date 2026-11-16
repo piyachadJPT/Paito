@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, UserRound } from "lucide-react";
+import { HandIcon } from "@/components/ui/icons";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
@@ -28,16 +28,16 @@ export function AccountSection() {
 
   return (
     <section aria-labelledby="account-heading">
-      <h2 id="account-heading" className="mb-2 px-1 text-[13px] font-semibold tracking-wide text-ink-2">
+      <h2 id="account-heading" className="mb-2 px-1 font-hand text-[16px] font-bold text-ink-2">
         บัญชี
       </h2>
-      <div className="rounded-[var(--radius-card)] border border-line bg-card">
+      <div className="rounded-[6px] bg-card shadow-[0_3px_10px_rgb(60_40_10/0.12)]">
         <div className="flex min-h-14 items-center gap-3 px-4">
-          <UserRound aria-hidden size={20} className="shrink-0 text-ink-2" />
+          <HandIcon name="user" size={22} className="text-ink-2" />
           <span className="min-w-0 flex-1 truncate text-[17px]">{user?.email ?? "—"}</span>
         </div>
         <div className="border-t border-line p-2">
-          <Button variant="danger" size="md" className="w-full" icon={<LogOut aria-hidden size={18} />} onClick={() => setConfirming(true)}>
+          <Button variant="danger" size="md" className="w-full" icon={<HandIcon name="logout" size={20} />} onClick={() => setConfirming(true)}>
             ออกจากระบบ
           </Button>
         </div>

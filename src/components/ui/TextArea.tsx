@@ -13,14 +13,14 @@ export function TextArea({ label, hint, hideLabel = false, className = "", id, r
   const hintId = `${inputId}-hint`;
   return (
     <div className={className}>
-      <label htmlFor={inputId} className={hideLabel ? "sr-only" : "mb-2 block text-[15px] font-semibold text-ink-2"}>
+      <label htmlFor={inputId} className={hideLabel ? "sr-only" : "mb-2 block font-hand text-[16px] font-bold text-ink-2"}>
         {label}
       </label>
       <textarea
         id={inputId}
         rows={rows}
         aria-describedby={hint ? hintId : undefined}
-        className="block w-full resize-y appearance-none rounded-2xl border border-line-strong bg-card px-4 py-3 text-[17px] leading-relaxed text-ink outline-none placeholder:text-ink-3 focus:border-primary focus:ring-4 focus:ring-primary-soft disabled:opacity-60"
+        className="block w-full resize-y appearance-none rounded-[8px] border-[1.5px] border-line-strong bg-card bg-[repeating-linear-gradient(transparent_0_27px,var(--line-strong)_27px_28px)] bg-local bg-[position:0_12px] px-4 py-3 text-[17px] leading-[28px] text-ink outline-none placeholder:text-ink-3 focus:border-primary focus:ring-4 focus:ring-primary-soft disabled:opacity-60"
         {...rest}
       />
       {hint && (

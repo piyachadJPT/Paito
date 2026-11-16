@@ -1,6 +1,6 @@
 "use client";
 
-import { FlaskConical } from "lucide-react";
+import { HandIcon } from "@/components/ui/icons";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/Button";
 import { DateField } from "@/components/ui/DateField";
@@ -67,7 +67,7 @@ export function DevSection({ timeZone = DEFAULT_TIMEZONE }: { timeZone?: string 
     <Section title="นักพัฒนา" footer="เปิดด้วย ?dev=1 · ซ่อนด้วย ?dev=0 · เวลาจำลองเดินต่อเองและจำไว้ในเครื่องนี้">
       <div className="flex flex-col gap-4 p-4">
         <p className="flex items-center gap-2 text-[15px]">
-          <FlaskConical aria-hidden size={18} className={simulated ? "text-warning-ink" : "text-ink-2"} />
+          <HandIcon name="flask" size={20} className={simulated ? "text-warning-ink" : "text-ink-2"} />
           <span className="text-ink-2">{simulated ? "นาฬิกาจำลอง" : "เวลาจริง"}</span>
           <span className="font-semibold tabular-nums">{current}</span>
         </p>

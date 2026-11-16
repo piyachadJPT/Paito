@@ -1,14 +1,17 @@
 "use client";
 
-import { ArrowLeft, MapPin, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { PostcardScene } from "@/components/now/scene/PostcardScene";
 import { Button } from "@/components/ui/Button";
+import { HandIcon } from "@/components/ui/icons";
 import { OTP_LENGTH, OtpInput } from "@/components/ui/OtpInput";
 import { Splash } from "@/components/ui/Splash";
 import { TextField } from "@/components/ui/TextField";
 import { useNow } from "@/hooks/useNow";
 import { clock } from "@/lib/clock";
+import { skySlot } from "@/lib/scene";
+import { DEFAULT_TIMEZONE, getZonedParts } from "@/lib/time";
 import { useAuth } from "@/services/auth/AuthProvider";
 import { AUTH_ERROR_MESSAGES, authErrorMessage } from "@/services/auth/session-state";
 import { getSupabase } from "@/services/supabase/client";
@@ -110,27 +113,33 @@ export function LoginScreen() {
   if (status === "loading" || status === "signed_in") return <Splash />;
 
   const secondsLeft = resendSecondsLeft(sentAt, now?.getTime() ?? null);
+  // Cover picture: the car on the road under the current Thai sky (morning until mounted)
+  const sky = now ? skySlot(getZonedParts(now, DEFAULT_TIMEZONE).hour) : "morning";
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col px-6 pt-[calc(env(safe-area-inset-top)+56px)] pb-[calc(env(safe-area-inset-bottom)+24px)]">
-      <header className="flex items-center gap-3">
-        <span className="grid size-12 place-items-center rounded-2xl bg-primary text-on-primary">
-          <MapPin aria-hidden size={26} strokeWidth={2.4} />
-        </span>
-        <div>
-          <h1 className="text-[34px] leading-none font-bold tracking-tight">ไปต่อ</h1>
-          <p className="mt-1 text-[15px] text-ink-2">อยู่ไหน · ไปไหนต่อ · ต้องออกกี่โมง</p>
-        </div>
+    <main className="paper-margin mx-auto flex min-h-dvh w-full max-w-md flex-col pt-[calc(env(safe-area-inset-top)+28px)] pr-5 pb-[calc(env(safe-area-inset-bottom)+24px)] pl-7">
+      {/* journal cover: a taped postcard of the road ahead */}
+      <div className="relative -rotate-[1.5deg] bg-card p-2.5 pb-3 shadow-[var(--shadow-card)]">
+        <span
+          aria-hidden
+          className="absolute -top-3 left-1/2 z-10 h-6 w-[84px] -translate-x-1/2 rotate-[2.5deg] bg-[rgb(222_184_110/0.6)] [clip-path:polygon(3%_0,97%_4%,100%_50%,96%_100%,2%_96%,0_45%)]"
+        />
+        <PostcardScene scene={{ sky, subject: "driving", extras: [] }} height={130} />
+      </div>
+
+      <header className="mt-6">
+        <h1 className="font-hand text-[44px] leading-[1.25] font-bold">ไปต่อ</h1>
+        <p className="font-hand text-[17px] font-semibold text-ink-2">อยู่ไหน · ไปไหนต่อ · ต้องออกกี่โมง</p>
       </header>
 
       {readOnly && (
-        <p className="mt-8 rounded-2xl bg-primary-soft px-4 py-3 text-[15px] text-ink">
+        <p className="mt-5 rotate-[0.5deg] rounded-[4px] bg-primary-soft px-4 py-3 text-[15px] text-ink shadow-[0_3px_8px_rgb(60_40_10/0.1)]">
           เซสชันหมดอายุ เข้าสู่ระบบอีกครั้งเพื่อแก้ไขและ sync ข้อมูลในเครื่องยังอยู่ครบ
         </p>
       )}
 
       {step === "email" ? (
-        <form onSubmit={onSubmitEmail} noValidate className="mt-10 flex flex-col gap-6">
+        <form onSubmit={onSubmitEmail} noValidate className="mt-6 flex flex-col gap-6 rounded-[6px] bg-card p-4 shadow-[0_3px_10px_rgb(60_40_10/0.12)]">
           <TextField
             label="อีเมล"
             type="email"
@@ -150,12 +159,12 @@ export function LoginScreen() {
             hint={`เราจะส่งรหัส ${OTP_LENGTH} หลักไปที่อีเมลนี้`}
             disabled={busy}
           />
-          <Button type="submit" loading={busy} icon={<Send aria-hidden size={18} />}>
+          <Button type="submit" loading={busy} icon={<HandIcon name="navigate" size={22} />}>
             ส่งรหัส
           </Button>
         </form>
       ) : (
-        <form onSubmit={onSubmitCode} noValidate className="mt-10 flex flex-col gap-6">
+        <form onSubmit={onSubmitCode} noValidate className="mt-6 flex flex-col gap-6 rounded-[6px] bg-card p-4 shadow-[0_3px_10px_rgb(60_40_10/0.12)]">
           <p className="text-[15px] text-ink-2">
             ส่งรหัสไปที่ <span className="font-semibold break-all text-ink">{email}</span> แล้ว
           </p>
@@ -178,7 +187,7 @@ export function LoginScreen() {
             <Button
               variant="ghost"
               size="md"
-              icon={<ArrowLeft aria-hidden size={18} />}
+              icon={<HandIcon name="undo" size={20} />}
               onClick={() => {
                 setStep("email");
                 setError(null);

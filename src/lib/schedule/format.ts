@@ -26,3 +26,16 @@ export function formatDuration(ms: number): string {
   const seconds = Math.floor((ms % MINUTE) / 1000);
   return `${String(totalMinutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
+
+/** Journal heading for a trip day: "วันแรก" · "วันที่ 2" · "วันสุดท้าย". */
+export function formatDayOrdinal(dayNumber: number, totalDays: number): string {
+  if (dayNumber === 1) return "วันแรก";
+  if (dayNumber === totalDays) return "วันสุดท้าย";
+  return `วันที่ ${dayNumber}`;
+}
+
+/** The route part of a day title ("ลำพูน → ลำปาง · เที่ยว…" → "ลำพูน → ลำปาง"), or null. */
+export function routeTitle(title: string | null | undefined): string | null {
+  const route = title?.split(" · ")[0]?.trim();
+  return route ? route : null;
+}

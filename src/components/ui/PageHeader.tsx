@@ -6,8 +6,8 @@ export function PageHeader({ title, subtitle }: { title: ReactNode; subtitle?: R
   return (
     <header className="flex items-start justify-between gap-3 pt-3">
       <div className="min-w-0">
-        <h1 className="text-[28px] leading-tight font-bold tracking-tight">{title}</h1>
-        {subtitle && <p className="mt-1 text-[15px] text-ink-2">{subtitle}</p>}
+        <h1 className="font-hand text-[30px] leading-[1.3] font-bold">{title}</h1>
+        {subtitle && <p className="font-hand text-[16px] font-semibold text-ink-2">{subtitle}</p>}
       </div>
       <div className="pt-1">
         <SyncStatusPill />
@@ -16,12 +16,12 @@ export function PageHeader({ title, subtitle }: { title: ReactNode; subtitle?: R
   );
 }
 
-/** Grouped settings card with a small caption, iOS-style. */
+/** Grouped settings card: a handwritten caption over a slip of paper. */
 export function Section({ title, children, footer }: { title: string; children: ReactNode; footer?: ReactNode }) {
   return (
     <section className="mt-7">
-      <h2 className="mb-2 px-1 text-[13px] font-semibold tracking-wide text-ink-2">{title}</h2>
-      <div className="rounded-[var(--radius-card)] border border-line bg-card">{children}</div>
+      <h2 className="mb-2 px-1 font-hand text-[16px] font-bold text-ink-2">{title}</h2>
+      <div className="rounded-[6px] bg-card shadow-[0_3px_10px_rgb(60_40_10/0.12)]">{children}</div>
       {footer && <div className="mt-2 px-1 text-[13px] leading-relaxed text-ink-2">{footer}</div>}
     </section>
   );

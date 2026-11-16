@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { formatCalendarDayMonth } from "@/lib/time";
 import type { DayRow } from "@/services/data/types";
 
-/** Horizontally scrollable day picker: "D1 31 ธ.ค." (SPEC §10.4). */
+/** Horizontally scrollable day picker as ticket stubs: "D1 31 ธ.ค." (SPEC §10.4). */
 export function DayTabs({
   days,
   selected,
@@ -24,7 +24,7 @@ export function DayTabs({
 
   return (
     <nav aria-label="เลือกวัน" className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none]">
-      <ul className="flex w-max gap-2 py-1">
+      <ul className="flex w-max gap-3 px-1 py-2">
         {days.map((d) => {
           const active = d.day_number === selected;
           return (
@@ -36,11 +36,14 @@ export function DayTabs({
                 type="button"
                 aria-current={active ? "date" : undefined}
                 onClick={() => onSelect(d.day_number)}
-                className={`flex min-h-11 flex-col items-center justify-center rounded-2xl border px-4 py-1.5 leading-tight ${
-                  active ? "border-primary bg-primary text-on-primary" : "border-line bg-card text-ink active:bg-card-sunken"
-                }`}
+                // ticket stub: notched sides, alternately tilted like stubs tucked into a journal
+                className={`relative flex min-h-12 flex-col items-center justify-center rounded-[5px] px-4 py-1.5 leading-tight shadow-[0_2px_6px_rgb(60_40_10/0.14)] ${
+                  d.day_number % 2 ? "-rotate-1" : "rotate-1"
+                } ${active ? "bg-primary text-on-primary" : "bg-card text-ink active:bg-card-sunken"}`}
               >
-                <span className="text-[13px] font-bold">
+                <span aria-hidden className="absolute top-1/2 -left-[6px] size-3 -translate-y-1/2 rounded-full bg-canvas" />
+                <span aria-hidden className="absolute top-1/2 -right-[6px] size-3 -translate-y-1/2 rounded-full bg-canvas" />
+                <span className="font-hand text-[15px] font-bold">
                   D{d.day_number}
                   {today === d.day_number && <span className={active ? "" : "text-primary"}> · วันนี้</span>}
                 </span>

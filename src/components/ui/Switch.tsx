@@ -36,7 +36,7 @@ export function Switch({ label, description, checked, onChange, disabled }: Swit
       </span>
       <span
         aria-hidden
-        className={`relative h-[31px] w-[51px] shrink-0 rounded-full transition-colors ${checked ? "bg-success" : "bg-line-strong"}`}
+        className={`relative h-[31px] w-[51px] shrink-0 rounded-full transition-colors ${checked ? "bg-primary" : "bg-line-strong"}`}
       >
         <span
           className={`absolute top-[2px] size-[27px] rounded-full bg-white shadow transition-transform ${

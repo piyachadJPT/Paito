@@ -4,10 +4,14 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 type Variant = "primary" | "secondary" | "danger" | "ghost";
 type Size = "lg" | "md";
 
+// "Pressable paper": a solid 3px shadow underneath; pressing drops the button
+// onto it (instant state change, no transition).
+const PRESS = "active:translate-y-[2px] active:shadow-none disabled:translate-y-0 disabled:shadow-none";
+
 const VARIANTS: Record<Variant, string> = {
-  primary: "bg-primary text-on-primary active:bg-primary-pressed disabled:bg-line-strong disabled:text-ink-2",
-  secondary: "bg-card text-primary border border-line active:bg-card-sunken disabled:text-ink-3",
-  danger: "bg-warning-soft text-warning-ink active:bg-warning/25 disabled:text-ink-3",
+  primary: `bg-primary text-on-primary shadow-[0_3px_0_var(--primary-pressed)] ${PRESS} disabled:bg-line-strong disabled:text-ink-2`,
+  secondary: `bg-card text-ink border-[1.5px] border-line-strong shadow-[0_3px_0_var(--line-strong)] ${PRESS} active:bg-card-sunken disabled:text-ink-3`,
+  danger: `bg-warning-soft text-warning-ink border-[1.5px] border-warning/40 shadow-[0_3px_0_rgb(234_88_12/0.3)] ${PRESS} disabled:text-ink-3`,
   ghost: "bg-transparent text-primary active:bg-primary-soft disabled:text-ink-3",
 };
 

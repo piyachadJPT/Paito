@@ -1,6 +1,6 @@
 "use client";
 
-import { EmptyIllustration } from "@/components/ui/EmptyIllustration";
+import { PostcardScene } from "@/components/now/scene/PostcardScene";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { useActiveTripId, useTrips } from "@/hooks/useLocalData";
 import { AccountSection } from "./AccountSection";
@@ -22,10 +22,10 @@ export function SettingsScreen() {
       {loading ? (
         <SettingsSkeleton />
       ) : trips.length === 0 ? (
-        <div className="mt-6 rounded-[var(--radius-card)] border border-line bg-card px-5 pt-6 pb-3 text-center">
-          <EmptyIllustration className="mx-auto w-48" />
-          <h2 className="mt-4 text-[20px] font-bold">ยังไม่มีทริป</h2>
-          <p className="mt-1 text-[15px] text-ink-2">เริ่มจากสร้างทริปใหม่ หรือนำเข้าไฟล์แผนเที่ยวที่เตรียมไว้</p>
+        <div className="mt-6 -rotate-[1deg] bg-card p-2.5 pb-3 text-center shadow-[var(--shadow-card)]">
+          <PostcardScene scene={{ sky: "morning", subject: "before_trip", extras: [] }} height={140} />
+          <h2 className="mt-4 font-hand text-[22px] font-bold">ยังไม่มีทริป</h2>
+          <p className="mt-1 px-3 text-[15px] text-ink-2">เริ่มจากสร้างทริปใหม่ หรือนำเข้าไฟล์แผนเที่ยวที่เตรียมไว้</p>
           <div className="-mx-2 mt-3 text-left">
             <TripActions active={null} />
           </div>
@@ -50,9 +50,9 @@ function SettingsSkeleton() {
   return (
     <div aria-hidden className="mt-7 flex flex-col gap-3">
       <div className="h-4 w-24 rounded-full bg-card-sunken" />
-      <div className="h-36 rounded-[var(--radius-card)] bg-card-sunken" />
+      <div className="h-36 rounded-[6px] bg-card-sunken" />
       <div className="mt-4 h-4 w-28 rounded-full bg-card-sunken" />
-      <div className="h-28 rounded-[var(--radius-card)] bg-card-sunken" />
+      <div className="h-28 rounded-[6px] bg-card-sunken" />
     </div>
   );
 }

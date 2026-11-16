@@ -1,9 +1,9 @@
 "use client";
 
-import { ArrowDown, ArrowUp, CalendarArrowUp, Check, CheckCheck, MapPin, RotateCcw, SkipForward, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { Button } from "@/components/ui/Button";
+import { HandIcon } from "@/components/ui/icons";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Stepper } from "@/components/ui/Stepper";
@@ -21,7 +21,7 @@ import { dayTimeToUtc, formatCalendarDayMonth, formatTime, toLocalHHMM } from "@
 import { pressStatus, savePlanChange } from "@/services/data/plan-repo";
 import { useRepoDeps } from "@/services/data/SyncProvider";
 import type { DayRow, StopRow, TripRow } from "@/services/data/types";
-import { STOP_TYPES } from "./stop-visuals";
+import { STOP_TYPES, StopTypeIcon } from "./stop-visuals";
 
 interface Props {
   trip: TripRow;
@@ -165,12 +165,12 @@ function EditorBody({ trip, day, days, tripStops, stop, dayStops, onClose }: Pro
 
   return (
     <div className="mt-4 flex flex-col gap-5 pb-2">
-      {readOnly && <p className="rounded-xl bg-primary-soft px-3 py-2 text-[14px]">ดูได้อย่างเดียว · เข้าสู่ระบบอีกครั้งเพื่อแก้ไข</p>}
+      {readOnly && <p className="rotate-[0.4deg] rounded-[4px] bg-primary-soft px-3 py-2 text-[14px]">ดูได้อย่างเดียว · เข้าสู่ระบบอีกครั้งเพื่อแก้ไข</p>}
 
       {/* computed times (read-only) */}
       {!isOrigin && (
-        <p className="flex items-center gap-2 rounded-xl bg-card-sunken px-3 py-2.5 text-[15px] tabular-nums">
-          <span className="text-ink-2">ตามแผน</span>
+        <p className="flex items-center gap-2 rounded-[6px] border-[1.5px] border-dashed border-line-strong px-3 py-2.5 text-[15px] tabular-nums">
+          <span className="font-hand text-[16px] font-bold text-ink-2">ตามแผน</span>
           <span className="font-semibold">
             ถึง {stop.planned_arrival_at ? formatTime(stop.planned_arrival_at, tz) : "—"} · ออก{" "}
             {stop.planned_departure_at ? formatTime(stop.planned_departure_at, tz) : "—"}
@@ -187,7 +187,7 @@ function EditorBody({ trip, day, days, tripStops, stop, dayStops, onClose }: Pro
               variant={a === "arrive" || a === "complete" ? "primary" : "secondary"}
               disabled={readOnly || busy}
               icon={
-                a === "arrive" ? <MapPin aria-hidden size={18} /> : a === "complete" ? <CheckCheck aria-hidden size={18} /> : a === "skip" ? <SkipForward aria-hidden size={18} /> : <RotateCcw aria-hidden size={18} />
+                <HandIcon name={a === "arrive" ? "arrive" : a === "complete" ? "check" : a === "skip" ? "skip" : "undo"} size={20} />
               }
               onClick={() => void status(a)}
             >
@@ -201,10 +201,10 @@ function EditorBody({ trip, day, days, tripStops, stop, dayStops, onClose }: Pro
 
       {!isOrigin && (
         <div>
-          <p className="mb-2 text-[15px] font-semibold text-ink-2">ประเภท</p>
+          <p className="mb-2 font-hand text-[16px] font-bold text-ink-2">ประเภท</p>
           <SegmentedControl<StopRow["stop_type"]>
             label="ประเภทสถานที่"
-            options={STOP_TYPES.map((t) => ({ value: t.value, label: t.label }))}
+            options={STOP_TYPES.map((t) => ({ value: t.value, label: t.label, icon: <StopTypeIcon type={t.value} size={30} /> }))}
             value={type}
             onChange={setType}
             disabled={readOnly}
@@ -239,15 +239,15 @@ function EditorBody({ trip, day, days, tripStops, stop, dayStops, onClose }: Pro
               disabled={readOnly}
             />
             {stop.travel_needs_review && travel === stop.travel_minutes && travel !== null && (
-              <div className="mt-2 flex items-center gap-2 rounded-xl bg-warning-soft px-3 py-1.5 text-[14px] text-warning-ink">
+              <div className="mt-2 flex rotate-[0.4deg] items-center gap-2 rounded-[4px] border border-warning/30 bg-warning-soft px-3 py-1.5 text-[14px] text-warning-ink">
                 <span className="flex-1">จุดก่อนหน้าเปลี่ยน ตรวจเวลาขับอีกครั้ง</span>
-                <Button size="md" variant="ghost" disabled={readOnly || busy} icon={<Check aria-hidden size={16} />} onClick={() => void save({ travel_needs_review: false }, "ยืนยันเวลาขับแล้ว")}>
+                <Button size="md" variant="ghost" disabled={readOnly || busy} icon={<HandIcon name="check" size={18} />} onClick={() => void save({ travel_needs_review: false }, "ยืนยันเวลาขับแล้ว")}>
                   ถูกต้อง
                 </Button>
               </div>
             )}
           </div>
-          <div className="rounded-2xl border border-line px-4 py-2">
+          <div className="rounded-[8px] border-[1.5px] border-dashed border-line-strong px-4 py-2">
             <Switch
               label="ล็อกเวลาถึง"
               description="เช่น งานที่เริ่มตรงเวลา เลื่อนแผนแล้วจุดนี้จะไม่ขยับ"
@@ -280,20 +280,20 @@ function EditorBody({ trip, day, days, tripStops, stop, dayStops, onClose }: Pro
       </Button>
 
       {!isOrigin && (
-        <div className="flex flex-col gap-2 border-t border-line pt-4">
-          <p className="text-[13px] font-semibold text-ink-2">จัดลำดับ</p>
+        <div className="flex flex-col gap-2 border-t-2 border-dashed border-line-strong pt-4">
+          <p className="font-hand text-[16px] font-bold text-ink-2">จัดลำดับ</p>
           <div className="grid grid-cols-3 gap-2">
-            <Button size="md" variant="secondary" icon={<ArrowUp aria-hidden size={18} />} disabled={readOnly || busy || !canMove(dayStops, stop.id, -1)} onClick={() => void move(-1)}>
+            <Button size="md" variant="secondary" icon={<HandIcon name="up" size={20} />} disabled={readOnly || busy || !canMove(dayStops, stop.id, -1)} onClick={() => void move(-1)}>
               ขึ้น
             </Button>
-            <Button size="md" variant="secondary" icon={<ArrowDown aria-hidden size={18} />} disabled={readOnly || busy || !canMove(dayStops, stop.id, 1)} onClick={() => void move(1)}>
+            <Button size="md" variant="secondary" icon={<HandIcon name="down" size={20} />} disabled={readOnly || busy || !canMove(dayStops, stop.id, 1)} onClick={() => void move(1)}>
               ลง
             </Button>
-            <Button size="md" variant="secondary" icon={<CalendarArrowUp aria-hidden size={18} />} disabled={readOnly || busy || days.length < 2} onClick={() => setChoosingDay(true)}>
+            <Button size="md" variant="secondary" icon={<HandIcon name="calendar" size={20} />} disabled={readOnly || busy || days.length < 2} onClick={() => setChoosingDay(true)}>
               ย้ายวัน
             </Button>
           </div>
-          <Button size="md" variant="danger" className="mt-2" icon={<Trash2 aria-hidden size={18} />} disabled={readOnly || busy} onClick={() => setConfirmDelete(true)}>
+          <Button size="md" variant="danger" className="mt-2" icon={<HandIcon name="trash" size={20} />} disabled={readOnly || busy} onClick={() => setConfirmDelete(true)}>
             ลบสถานที่นี้
           </Button>
         </div>
@@ -330,9 +330,9 @@ function EditorBody({ trip, day, days, tripStops, stop, dayStops, onClose }: Pro
                   type="button"
                   disabled={busy}
                   onClick={() => void moveToDay(d)}
-                  className="flex min-h-14 w-full items-center gap-3 rounded-2xl border border-line px-4 text-left active:bg-card-sunken"
+                  className="relative flex min-h-14 w-full items-center gap-3 rounded-[5px] bg-card px-4 text-left shadow-[0_2px_6px_rgb(60_40_10/0.14)] active:bg-card-sunken"
                 >
-                  <span className="text-[17px] font-bold">D{d.day_number}</span>
+                  <span className="font-hand text-[18px] font-bold text-primary">D{d.day_number}</span>
                   <span className="text-[15px] text-ink-2">{formatCalendarDayMonth(d.date)}</span>
                   {d.title && <span className="min-w-0 flex-1 truncate text-[13px] text-ink-2">{d.title}</span>}
                 </button>

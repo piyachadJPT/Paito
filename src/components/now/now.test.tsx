@@ -9,7 +9,9 @@ import { db } from "@/services/data/db";
 import { clearLocal } from "@/services/data/local";
 import { importTrip } from "@/services/data/repo";
 import { at, iso, rawSeed } from "@/test/seed";
-import { NowScreen, tintFor } from "./NowScreen";
+import type { StopRow } from "@/services/data/types";
+import { NowScreen, pictureHeightFor } from "./NowScreen";
+import { TodayList } from "./TodayList";
 
 vi.mock("next/navigation", () => ({ useRouter: () => ({ replace: vi.fn() }), usePathname: () => "/" }));
 vi.mock("@/services/auth/AuthProvider", () => ({
@@ -80,6 +82,17 @@ describe("NowScreen (seed + simulated clock)", () => {
     expect(screen.getByRole("button", { name: "เลื่อนแผนที่เหลือ +10 นาที" })).toBeTruthy();
   });
 
+  it("10:08 at the temple → journal header and a postcard with postmark + departure stamp", async () => {
+    await db.trip_stops.put({ ...(await stop(TEMPLE)), status: "in_progress", started_at: iso("2026-12-31T09:30") });
+    await renderAt("2026-12-31T10:08");
+    const card = await screen.findByRole("region", { name: "ตอนนี้" });
+    const title = screen.getByRole("heading", { level: 1, name: "ลำพูน → ลำปาง" });
+    expect(title.parentElement!.textContent).toContain("วันแรก · พฤ. 31 ธ.ค. 2569");
+    expect(card.textContent).toContain(TEMPLE);
+    expect(card.textContent).toContain("ถึง 09:30");
+    expect(within(card).getByText("10:50")).toBeTruthy(); // departure stamp
+  });
+
   it("'ออกตามแผน' hides the late box and counts the visit down to the departure", async () => {
     await db.trip_stops.put({ ...(await stop(TEMPLE)), status: "in_progress", started_at: iso("2026-12-31T09:30") });
     await renderAt("2026-12-31T10:00");
@@ -130,14 +143,87 @@ describe("NowScreen (seed + simulated clock)", () => {
   });
 });
 
-describe("tintFor", () => {
+describe("pictureHeightFor", () => {
   it.each([
-    [7, "bg-tint-morning"],
-    [12, "bg-tint-day"],
-    [17, "bg-tint-evening"],
-    [21, "bg-tint-night"],
-    [2, "bg-tint-night"],
-  ])("%d h → %s", (hour, cls) => {
-    expect(tintFor(hour)).toBe(cls);
+    [0, 150],
+    [1, 96],
+    [2, 40],
+    [3, 0], // stale note + alert + overdue box: no room for a picture (review finding)
+  ])("%i notes → %ipx", (notes, px) => {
+    expect(pictureHeightFor(notes)).toBe(px);
+  });
+});
+
+describe("TodayList (journal)", () => {
+  const base = {
+    trip_id: "t",
+    trip_day_id: "d",
+    created_at: iso("2026-11-20T10:00"),
+    travel_minutes: 30,
+    travel_needs_review: false,
+    duration_minutes: 60,
+    is_fixed: false,
+    planned_departure_at: null,
+    started_at: null,
+    completed_at: null,
+    status: "not_started",
+    stop_type: "sight",
+  };
+  const row = (i: number, name: string, extra: object) =>
+    ({ ...base, id: `s${i}`, sort_order: i, name, planned_arrival_at: null, ...extra }) as unknown as StopRow;
+  const LONG = "พิพิธภัณฑ์เซรามิคธนบดีและศูนย์การเรียนรู้ลำปางแห่งใหม่";
+
+  function renderList() {
+    render(
+      <TodayList
+        dayNumber={1}
+        timeZone="Asia/Bangkok"
+        stops={[
+          row(0, "บ้าน (ลำพูน)", { stop_type: "lodging", status: "completed", planned_departure_at: iso("2026-12-31T08:00"), completed_at: iso("2026-12-31T08:02") }),
+          row(1, TEMPLE, { status: "completed", planned_arrival_at: iso("2026-12-31T09:20"), completed_at: iso("2026-12-31T09:21") }),
+          row(2, "วัดศรีรองเมือง", { status: "in_progress", planned_arrival_at: iso("2026-12-31T10:00") }),
+          row(3, "สะพานรัษฎาภิเศก", { status: "skipped", planned_arrival_at: iso("2026-12-31T10:40") }),
+          row(4, LONG, { planned_arrival_at: iso("2026-12-31T11:20") }),
+        ]}
+      />,
+    );
+    return screen.getByRole("list");
+  }
+
+  it("stamps finished places with their time and strikes the name", () => {
+    const list = renderList();
+    const items = within(list).getAllByRole("listitem");
+    expect(items[0].textContent).toContain("ออก 08:02");
+    expect(items[1].textContent).toContain("เสร็จ 09:21");
+    expect(within(items[1]).getByText(TEMPLE).className).toContain("line-through");
+  });
+
+  it("marks the starting point as the departure", () => {
+    render(
+      <TodayList
+        dayNumber={1}
+        timeZone="Asia/Bangkok"
+        stops={[row(0, "บ้าน (ลำพูน)", { stop_type: "lodging", planned_departure_at: iso("2026-12-31T08:00") })]}
+      />,
+    );
+    expect(screen.getByRole("listitem").textContent).toContain("ออกเดินทาง");
+  });
+
+  it("labels the other statuses in words", () => {
+    const items = within(renderList()).getAllByRole("listitem");
+    expect(items[2].textContent).toContain("อยู่ที่นี่");
+    expect(items[3].textContent).toContain("ข้าม");
+    expect(within(items[3]).getByText("สะพานรัษฎาภิเศก").className).toContain("line-through");
+    expect(items[4].textContent).toContain("11:20");
+  });
+
+  it("keeps long names inside the row", () => {
+    const items = within(renderList()).getAllByRole("listitem");
+    expect(within(items[4]).getByText(LONG).className).toMatch(/truncate|break-words/);
+  });
+
+  it("links to the full day plan", () => {
+    renderList();
+    expect(screen.getByRole("link", { name: "ดูทั้งหมด" }).getAttribute("href")).toBe("/plan?day=1");
   });
 });

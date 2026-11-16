@@ -1,6 +1,6 @@
 "use client";
 
-import { Minus, Plus } from "lucide-react";
+import { HandIcon } from "@/components/ui/icons";
 import { useId } from "react";
 
 export interface StepperProps {
@@ -24,10 +24,10 @@ export function Stepper({ label, value, onChange, step, min = 0, max = 24 * 60, 
 
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-[15px] font-semibold text-ink-2">
+      <label htmlFor={id} className="mb-2 block font-hand text-[16px] font-bold text-ink-2">
         {label}
       </label>
-      <div className="flex h-14 items-stretch overflow-hidden rounded-2xl border border-line-strong bg-card focus-within:border-primary focus-within:ring-4 focus-within:ring-primary-soft">
+      <div className="flex h-14 items-stretch overflow-hidden rounded-[8px] border-[1.5px] border-line-strong bg-card focus-within:border-primary focus-within:ring-4 focus-within:ring-primary-soft">
         <button
           type="button"
           aria-label={`ลด ${step} ${unit}`}
@@ -35,7 +35,7 @@ export function Stepper({ label, value, onChange, step, min = 0, max = 24 * 60, 
           onClick={() => value !== null && onChange(clamp(value - step))}
           className="grid w-14 shrink-0 place-items-center text-primary active:bg-primary-soft disabled:text-ink-3"
         >
-          <Minus aria-hidden size={20} strokeWidth={2.5} />
+          <HandIcon name="minus" size={22} strokeWidth={2.4} />
         </button>
         <div className="flex flex-1 items-center justify-center gap-1.5 border-x border-line">
           <input
@@ -61,7 +61,7 @@ export function Stepper({ label, value, onChange, step, min = 0, max = 24 * 60, 
           onClick={() => onChange(clamp((value ?? 0) + step))}
           className="grid w-14 shrink-0 place-items-center text-primary active:bg-primary-soft disabled:text-ink-3"
         >
-          <Plus aria-hidden size={20} strokeWidth={2.5} />
+          <HandIcon name="plus" size={22} strokeWidth={2.4} />
         </button>
       </div>
     </div>
