@@ -100,7 +100,7 @@ export function PlanScreen() {
           <DayTicket day={day} stops={dayStops} timeZone={trip.timezone} totalDays={days.length} />
           <Timeline stops={dayStops} analysis={analysis} timeZone={trip.timezone} onOpen={(s) => setOpenStopId(s.id)} />
           {/* blank slip to write a new place on */}
-          <div className="mt-3 pl-[84px]">
+          <div className="mt-3 pl-[92px]">
             <button
               type="button"
               disabled={!repo}
@@ -129,7 +129,7 @@ function PlanSkeleton() {
       </div>
       <div className="mt-4 h-40 rounded-[6px] bg-card-sunken" />
       {[0, 1, 2].map((i) => (
-        <div key={i} className="mt-3 ml-[84px] h-16 rounded-[6px] bg-card-sunken" />
+        <div key={i} className="mt-3 ml-[92px] h-16 rounded-[6px] bg-card-sunken" />
       ))}
     </div>
   );

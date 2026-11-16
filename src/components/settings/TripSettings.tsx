@@ -39,7 +39,7 @@ export function TripSettings({ trip }: { trip: TripRow }) {
           <Row label="ช่วงวันที่" value={`${formatCalendarDate(trip.start_date)} – ${formatCalendarDate(trip.end_date)}`} />
           <Row label="เขตเวลา" value={trip.timezone} />
         </dl>
-        <div className="border-t border-line p-2">
+        <div className="border-t border-line p-3">
           <Button
             variant="danger"
             size="md"
@@ -71,7 +71,7 @@ export function TripSettings({ trip }: { trip: TripRow }) {
       </Section>
 
       <Section title="เตือนก่อนออก (นาที)" footer="ข้อความเตือนจะขึ้นบนหน้า “ตอนนี้” ไม่มีเสียง และไม่เตือนระหว่างขับรถ">
-        <div className="p-2">
+        <div className="p-3">
           <SegmentedControl
             label="เตือนก่อนออกกี่นาที"
             options={ALERT_OPTIONS}
@@ -115,7 +115,7 @@ function NoteEditor({ trip, disabled }: { trip: TripRow; disabled: boolean }) {
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
   return (
-    <div>
+    <div className="relative">
       <TextArea
         label="ข้อมูลสำคัญของทริป"
         hideLabel
@@ -131,7 +131,8 @@ function NoteEditor({ trip, disabled }: { trip: TripRow; disabled: boolean }) {
         }}
         onBlur={() => void save(draft)}
       />
-      <p aria-live="polite" className="mt-2 flex h-5 items-center gap-1 px-1 text-[13px] text-success">
+      {/* floats in the textarea's corner so it reserves no space under the card */}
+      <p aria-live="polite" className="pointer-events-none absolute right-3 bottom-2.5 flex items-center gap-1 rounded-full bg-card px-1.5 text-[13px] text-success">
         {saved && (
           <>
             <HandIcon name="check" size={15} strokeWidth={2.6} /> บันทึกในเครื่องแล้ว

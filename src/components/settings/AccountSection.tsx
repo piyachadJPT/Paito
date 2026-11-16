@@ -36,7 +36,7 @@ export function AccountSection() {
           <HandIcon name="user" size={22} className="text-ink-2" />
           <span className="min-w-0 flex-1 truncate text-[17px]">{user?.email ?? "—"}</span>
         </div>
-        <div className="border-t border-line p-2">
+        <div className="border-t border-line p-3">
           <Button variant="danger" size="md" className="w-full" icon={<HandIcon name="logout" size={20} />} onClick={() => setConfirming(true)}>
             ออกจากระบบ
           </Button>

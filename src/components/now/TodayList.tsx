@@ -14,7 +14,7 @@ export function TodayList({ stops, dayNumber, timeZone }: { stops: StopRow[]; da
   const hm = (ms: string | null) => (ms ? formatTime(ms, timeZone).replace(" น.", "") : "—");
 
   return (
-    <section aria-labelledby="today-heading" className="mt-4">
+    <section aria-labelledby="today-heading" className="mt-5">
       <div className="mb-1 flex items-baseline justify-between px-1">
         <h2 id="today-heading" className="font-hand text-[19px] font-bold">
           แผนของวันนี้

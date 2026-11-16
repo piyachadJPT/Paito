@@ -114,7 +114,7 @@ export function NowScreen() {
   const notes = Number(state.alerts.length > 0) + Number(overdue || late) + Number(state.staleInProgress !== null);
 
   return (
-    <div className="paper-margin -mx-4 flex flex-col gap-2.5 px-4 pt-1 pl-[max(22px,env(safe-area-inset-left))]">
+    <div className="paper-margin -mx-4 flex flex-col gap-2.5 px-4 pt-3 pl-[max(22px,env(safe-area-inset-left))]">
       {/* 0. journal heading */}
       <JournalHeader day={state.day} totalDays={days.length} fallback={trip.name} />
 
@@ -149,7 +149,7 @@ export function NowScreen() {
 
       {/* 5. progress (pins along the day's road) */}
       {state.progress && state.progress.total > 0 && (state.kind === "at_stop" || state.kind === "pre_departure" || state.kind === "in_transit") && (
-        <section aria-label="ความคืบหน้า" className="px-1">
+        <section aria-label="ความคืบหน้า" className="mt-3 px-1">
           <RouteDots stops={state.dayStops} progress={state.progress} />
         </section>
       )}
