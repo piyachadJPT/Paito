@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { ClockBoot } from "@/components/clock/ClockBoot";
 import { AuthProvider } from "@/services/auth/AuthProvider";
+import { SyncProvider } from "@/services/data/SyncProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -25,7 +26,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="th">
       <body>
         <ClockBoot />
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <SyncProvider>{children}</SyncProvider>
+        </AuthProvider>
       </body>
     </html>
   );

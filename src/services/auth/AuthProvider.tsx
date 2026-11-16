@@ -2,6 +2,7 @@
 
 import { isAuthRetryableFetchError, type Session } from "@supabase/supabase-js";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import "@/services/data/register";
 import { getSupabase } from "@/services/supabase/client";
 import { clearKnownUser, readKnownUser, writeKnownUser, type KnownUser } from "./known-user";
 import { getLocalDataStore } from "./local-data";

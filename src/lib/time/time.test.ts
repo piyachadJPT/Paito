@@ -121,3 +121,13 @@ describe("zonedLocalToUtc", () => {
     expect(() => zonedLocalToUtc("2027-01-01 08:00", BKK)).toThrow(RangeError);
   });
 });
+
+describe("addDays / eachDateKey", () => {
+  it("adds calendar days across month and year ends", async () => {
+    const { addDays, eachDateKey } = await import(".");
+    expect(addDays("2026-12-31", 1)).toBe("2027-01-01");
+    expect(addDays("2027-03-01", -1)).toBe("2027-02-28");
+    expect(eachDateKey("2026-12-31", "2027-01-03")).toEqual(["2026-12-31", "2027-01-01", "2027-01-02", "2027-01-03"]);
+    expect(eachDateKey("2027-01-02", "2027-01-01")).toEqual([]);
+  });
+});

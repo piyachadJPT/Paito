@@ -27,7 +27,9 @@ const stopSchema = z.object({
   duration_minutes: minutes.default(0),
   fixed_arrive_at: localTime.optional(),
   note: z.string().nullish(),
-  // Backup extras (D10)
+  // Backup extras (D10): planned times keep shifted plans of started stops
+  planned_arrive_at: localTime.optional(),
+  planned_depart_at: localTime.optional(),
   status: z.enum(["not_started", "in_progress", "completed", "skipped"]).optional(),
   started_at: isoInstant.nullish(),
   completed_at: isoInstant.nullish(),
@@ -206,8 +208,16 @@ export function tripFileToRows(file: TripFile, deps: ConvertDeps): ImportedTripR
         travel_needs_review: s.travel_needs_review ?? false,
         duration_minutes: isOrigin ? 0 : s.duration_minutes,
         is_fixed: fixed,
-        planned_arrival_at: fixed ? toUtc(s.fixed_arrive_at!) : null,
-        planned_departure_at: isOrigin ? toUtc(s.depart_at!) : null,
+        planned_arrival_at: fixed
+          ? toUtc(s.fixed_arrive_at!)
+          : !isOrigin && s.planned_arrive_at
+            ? toUtc(s.planned_arrive_at)
+            : null,
+        planned_departure_at: isOrigin
+          ? toUtc(s.depart_at!)
+          : s.planned_depart_at
+            ? toUtc(s.planned_depart_at)
+            : null,
         status: isOrigin ? "not_started" : (s.status ?? "not_started"),
         started_at: s.started_at ? new Date(s.started_at).toISOString() : null,
         completed_at: s.completed_at ? new Date(s.completed_at).toISOString() : null,

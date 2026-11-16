@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useOutbox } from "@/hooks/useLocalData";
 import { useAuth } from "@/services/auth/AuthProvider";
 
 export function AccountSection() {
@@ -12,6 +13,7 @@ export function AccountSection() {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
+  const unsent = useOutbox()?.length ?? 0;
 
   async function onConfirm() {
     setBusy(true);
@@ -44,8 +46,12 @@ export function AccountSection() {
       <ConfirmDialog
         open={confirming}
         title="ออกจากระบบ?"
-        message="ข้อมูลทริปในเครื่องนี้จะถูกลบ ข้อมูลที่ sync แล้วยังอยู่ในบัญชี เข้าสู่ระบบใหม่เมื่อไหร่ก็โหลดกลับมาได้"
-        confirmLabel="ออกจากระบบ"
+        message={
+          unsent > 0
+            ? `ยังมี ${unsent} รายการที่ยังไม่ได้ส่งขึ้นบัญชี ถ้าออกจากระบบตอนนี้ รายการเหล่านี้จะหายไป ลอง “sync ตอนนี้” ก่อนดีกว่า`
+            : "ข้อมูลทริปในเครื่องนี้จะถูกลบ ข้อมูลที่ sync แล้วยังอยู่ในบัญชี เข้าสู่ระบบใหม่เมื่อไหร่ก็โหลดกลับมาได้"
+        }
+        confirmLabel={unsent > 0 ? "ออกจากระบบและทิ้งรายการที่ค้าง" : "ออกจากระบบ"}
         destructive
         busy={busy}
         onConfirm={() => void onConfirm()}

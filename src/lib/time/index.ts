@@ -150,3 +150,16 @@ function calendarDateToInstant(dateKey: string): number {
 function pad(n: number): string {
   return String(n).padStart(2, "0");
 }
+
+/** "YYYY-MM-DD" + n calendar days. */
+export function addDays(dateKey: string, n: number): string {
+  const ms = calendarDateToInstant(dateKey) + n * 86_400_000;
+  return new Date(ms).toISOString().slice(0, 10);
+}
+
+/** Every date from start to end inclusive ("YYYY-MM-DD"). */
+export function eachDateKey(start: string, end: string): string[] {
+  const out: string[] = [];
+  for (let d = start; d <= end; d = addDays(d, 1)) out.push(d);
+  return out;
+}
