@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
-import { PagePlaceholder } from "@/components/ui/PagePlaceholder";
+import { Suspense } from "react";
+import { PlanScreen } from "@/components/plan/PlanScreen";
 
 export const metadata: Metadata = { title: "แผนเที่ยว · ไปต่อ" };
 
 export default function PlanPage() {
-  return <PagePlaceholder title="แผนเที่ยว" note="หน้าแผนเที่ยวจะมาในขั้นที่ 6" />;
+  // useSearchParams (?day=) needs a Suspense boundary for static prerendering
+  return (
+    <Suspense>
+      <PlanScreen />
+    </Suspense>
+  );
 }

@@ -131,3 +131,13 @@ describe("addDays / eachDateKey", () => {
     expect(eachDateKey("2027-01-02", "2027-01-01")).toEqual([]);
   });
 });
+
+describe("toLocalHHMM / dayTimeToUtc", () => {
+  it("round-trips times on a trip day, including after midnight", async () => {
+    const { toLocalHHMM, dayTimeToUtc } = await import(".");
+    expect(toLocalHHMM("2026-12-31T12:00:00Z", "Asia/Bangkok")).toBe("19:00");
+    expect(dayTimeToUtc("2026-12-31", "19:00", 4, "Asia/Bangkok").toISOString()).toBe("2026-12-31T12:00:00.000Z");
+    expect(dayTimeToUtc("2026-12-31", "00:30", 4, "Asia/Bangkok").toISOString()).toBe("2026-12-31T17:30:00.000Z");
+    expect(dayTimeToUtc("2026-12-31", "04:00", 4, "Asia/Bangkok").toISOString()).toBe("2026-12-30T21:00:00.000Z");
+  });
+});

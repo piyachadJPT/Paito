@@ -111,19 +111,24 @@ export function formatTime(instant: Instant, timeZone: string): string {
   return `${text} น.`;
 }
 
-/** "ศ. 1 ม.ค. 2570" — Buddhist-era year via th-TH. */
+const TH_WEEKDAYS = ["อา.", "จ.", "อ.", "พ.", "พฤ.", "ศ.", "ส."];
+const TH_MONTHS = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+const BUDDHIST_ERA_OFFSET = 543;
+
+/**
+ * "ศ. 1 ม.ค. 2570" (Buddhist-era year). Built from our own name tables:
+ * browsers' ICU data differ ("พฤ." vs "พฤหัส"), the app must not.
+ */
 export function formatDate(instant: Instant, timeZone: string): string {
-  return formatter("date", timeZone, {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  }).format(toMs(instant));
+  const { year, month, day } = getZonedParts(instant, timeZone);
+  const weekday = new Date(Date.UTC(year, month - 1, day)).getUTCDay();
+  return `${TH_WEEKDAYS[weekday]} ${day} ${TH_MONTHS[month - 1]} ${year + BUDDHIST_ERA_OFFSET}`;
 }
 
 /** "31 ธ.ค." */
 export function formatDayMonth(instant: Instant, timeZone: string): string {
-  return formatter("daymonth", timeZone, { day: "numeric", month: "short" }).format(toMs(instant));
+  const { month, day } = getZonedParts(instant, timeZone);
+  return `${day} ${TH_MONTHS[month - 1]}`;
 }
 
 /**
@@ -162,4 +167,20 @@ export function eachDateKey(start: string, end: string): string[] {
   const out: string[] = [];
   for (let d = start; d <= end; d = addDays(d, 1)) out.push(d);
   return out;
+}
+
+/** Instant → "HH:MM" in `timeZone` (for <input type="time">). */
+export function toLocalHHMM(instant: Instant, timeZone: string): string {
+  const { hour, minute } = getZonedParts(instant, timeZone);
+  return `${pad(hour)}:${pad(minute)}`;
+}
+
+/**
+ * "HH:MM" on a trip day → instant. Times before the day cutoff belong to the
+ * night after (00:30 on Day 1 = 00:30 of the next calendar date).
+ */
+export function dayTimeToUtc(dayDate: string, hhmm: string, cutoffHour: number, timeZone: string): Date {
+  const hour = Number(hhmm.slice(0, 2));
+  const date = hour < cutoffHour ? addDays(dayDate, 1) : dayDate;
+  return zonedLocalToUtc(`${date}T${hhmm}`, timeZone);
 }

@@ -35,3 +35,14 @@ export function useMeta<T>(key: MetaKey) {
 export function useTripExport(tripId: string | null | undefined) {
   return useLiveQuery(async () => (tripId ? exportTrip(db, tripId).catch(() => null) : null), [tripId]);
 }
+
+export function useTripDays(tripId: string | null | undefined) {
+  return useLiveQuery(
+    async () => (tripId ? (await db.trip_days.where("trip_id").equals(tripId).toArray()).sort((a, b) => a.day_number - b.day_number) : []),
+    [tripId],
+  );
+}
+
+export function useTripStops(tripId: string | null | undefined) {
+  return useLiveQuery(async () => (tripId ? db.trip_stops.where("trip_id").equals(tripId).toArray() : []), [tripId]);
+}
