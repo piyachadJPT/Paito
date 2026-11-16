@@ -34,6 +34,8 @@ Next.js (App Router, เวอร์ชัน stable ล่าสุด) · Type
   - สร้าง migration: `npm run db:new -- <name>` · ดูสถานะ: `npm run db:status` · push: `npm run db:push`
 - generate types: `npm run db:types` → `src/services/supabase/types.ts` (ห้ามแก้มือ)
 - ตรวจ RLS ด้วย anon key: `npm run check:rls`
+- deploy: Vercel (region `sin1`, cron ใน `vercel.json`) · ทดสอบ keep-alive: `curl -i -H "Authorization: Bearer $CRON_SECRET" https://<โดเมน>/api/keepalive`
+- ทดสอบบน iPhone: `docs/TEST-CHECKLIST.md` · ทดลองใช้จริง: `docs/FIELD-TEST.md`
 
 ## วิธีทำงาน
 - ทำทีละขั้นตาม `docs/PROMPTS.md` จบขั้นแล้วหยุด รายงาน: ทำอะไรไป, วิธีทดสอบเอง, สิ่งที่ค้างหรือตัดสินใจเอง แล้วรอผมตรวจ

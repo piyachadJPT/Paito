@@ -2,7 +2,8 @@
 
 import { HandIcon } from "@/components/ui/icons";
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonClasses } from "@/components/ui/Button";
+import { buildAppNavUrl, buildNavUrl } from "@/lib/maps";
 import { DateField } from "@/components/ui/DateField";
 import { Section } from "@/components/ui/PageHeader";
 import { TimeField } from "@/components/ui/TimeField";
@@ -50,6 +51,8 @@ function useDevMode(): boolean {
 }
 
 const MIN = 60_000;
+/** Fixed test destination for the navigation link test (step 9, D35). */
+const NAV_TEST = { name: "วัดพระธาตุลำปางหลวง", latitude: 18.2177, longitude: 99.3895 };
 
 /** Developer panel: simulated clock + build version. */
 export function DevSection({ timeZone = DEFAULT_TIMEZONE }: { timeZone?: string }) {
@@ -106,6 +109,19 @@ export function DevSection({ timeZone = DEFAULT_TIMEZONE }: { timeZone?: string 
         >
           ใช้เวลาที่แสดงอยู่เป็นค่าเริ่มต้น
         </Button>
+
+        {/* D35: compare from the Home Screen app which link opens the Google Maps app */}
+        <div className="border-t border-line pt-3">
+          <p className="mb-2 text-[13px] text-ink-2">ทดสอบปุ่มนำทาง (ไปวัดพระธาตุลำปางหลวง)</p>
+          <div className="grid grid-cols-2 gap-2">
+            <a href={buildNavUrl(NAV_TEST)} target="_blank" rel="noopener noreferrer" className={buttonClasses("secondary", "md")}>
+              ลิงก์ https
+            </a>
+            <a href={buildAppNavUrl(NAV_TEST.latitude, NAV_TEST.longitude)} className={buttonClasses("secondary", "md")}>
+              comgooglemaps://
+            </a>
+          </div>
+        </div>
 
         <dl className="border-t border-line pt-3 text-[13px]">
           <dt className="text-ink-2">เวอร์ชัน build</dt>
