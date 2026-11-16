@@ -553,9 +553,9 @@ docs/
 
 ## 15. Deploy และการดูแล
 
-- Supabase: สร้างโปรเจกต์ที่ region Southeast Asia (Singapore) · migrations ผ่าน Supabase CLI
+- Supabase: โปรเจกต์ "Paito" (ref `mcoudtofkmldnabpzslu`) region Northeast Asia (Tokyo, ap-northeast-1) สร้างผ่าน Vercel Marketplace · migrations ผ่าน Supabase CLI (ดู D12)
 - Vercel: เชื่อม GitHub repo · function region `sin1` (`vercel.json` → `"regions": ["sin1"]`) · ใช้โดเมนฟรี `.vercel.app`
-- Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (หรือ publishable key), `CRON_SECRET` · ห้ามมี service/secret key ใน `NEXT_PUBLIC_*`
+- Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (รองรับ `NEXT_PUBLIC_SUPABASE_ANON_KEY` แบบเดิมเป็นทางสำรอง), `CRON_SECRET` · ห้ามมี service/secret key ใน `NEXT_PUBLIC_*` · ตัวอย่างใน `.env.example`
 - Keep-alive: Vercel Cron วันละครั้ง (Hobby ทำได้ถี่สุดวันละครั้ง) เรียก `/api/keepalive` → ตรวจ `Authorization: Bearer ${CRON_SECRET}` → เรียก `rpc('keepalive')` · ตั้ง `"schedule": "0 3 * * *"` (10:00 น. เวลาไทย)
 - ใช้แผนฟรีทั้งหมด
 
@@ -565,7 +565,7 @@ docs/
 
 | ช่วง | เป้าหมาย |
 |---|---|
-| 17–18 พ.ย. | เตรียม repo, Supabase (Singapore), ตั้งค่า Auth |
+| 17–18 พ.ย. | เตรียม repo, Supabase, ตั้งค่า Auth |
 | ภายใน อา. 29 พ.ย. | ขั้นที่ 1–4: scaffold, ฐานข้อมูล, auth, schedule engine |
 | ภายใน อา. 6 ธ.ค. | ขั้นที่ 5–6: data layer/sync, หน้าแผนเที่ยว |
 | ภายใน อา. 13 ธ.ค. | ขั้นที่ 7–8: หน้า "ตอนนี้", PWA/offline |
@@ -614,3 +614,11 @@ docs/
 | U6 | รายละเอียด | สีและไอคอนตามประเภทสถานที่ · เส้นทางย่อแบบหมุดบนการ์ดหลัก (แทนแถบ progress ธรรมดา แต่ยังมีข้อความ "เที่ยวแล้ว x จาก y ที่") · หัววันแบบตั๋วเดินทางในหน้าแผนเที่ยว · empty state ภาพเส้น SVG วาดเอง |
 | U7 | น้ำเสียง | กันเองและสั้นเฉพาะ empty / จบวัน / ก่อนทริป · ข้อความเวลาและการเตือนตามสเปก |
 | U8 | Component | เขียนเองทั้งหมด (ข้อ 10.1) |
+
+### ฐานข้อมูล (ขั้นที่ 2)
+| # | เรื่อง | ข้อตกลง |
+|---|---|---|
+| D12 | Region | ใช้โปรเจกต์ที่ Tokyo ต่อ (แทน Singapore) เพราะแอป offline-first ความหน่วงมีผลแค่ตอน sync |
+| D13 | สิทธิ์ตาราง | default privileges ของโปรเจกต์ให้ `anon` ทุกสิทธิ์ migration จึง `revoke all ... from anon` และ grant เฉพาะ select/insert/update/delete ให้ `authenticated` (RLS ยังเป็นด่านหลัก) · `set_updated_at()` ห้าม role ทั่วไปเรียก · `keepalive()` ให้ anon และ authenticated |
+| D14 | Index เพิ่ม | `trip_days(user_id)`, `trip_stops(user_id)` เพื่อรองรับ FK และ RLS |
+| D15 | ฟังก์ชัน | ทุกฟังก์ชันตั้ง `search_path = ''` ตามคำแนะนำ security advisor |

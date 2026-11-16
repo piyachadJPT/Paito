@@ -56,7 +56,7 @@ Project ref ของผม: <ใส่ project ref>
 - supabase init แล้ว link กับโปรเจกต์
 - migration ตาม SPEC 4.1–4.4 ครบ: enums, ตาราง, constraints, indexes, trigger updated_at, RLS, keepalive()
 - push migration · generate TypeScript types ไปที่ src/services/supabase/types.ts (+ script ใน package.json)
-- src/services/supabase/client.ts: browser client (persistSession, autoRefreshToken) จาก env NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY + ไฟล์ .env.example
+- src/services/supabase/client.ts: browser client (persistSession, autoRefreshToken) จาก env NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY + ไฟล์ .env.example
 - วิธีทดสอบ RLS ให้ผมรัน: anon อ่านได้ 0 แถว, insert โดยไม่ล็อกอินล้มเหลว
 - ตรวจกับผมว่าตั้งค่า Dashboard ตาม "ก่อนเริ่ม" ข้อ 3–4 ครบหรือยัง
 เสร็จเมื่อ: push migration ผ่าน, generate types ได้, ทดสอบ RLS ผ่าน

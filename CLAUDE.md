@@ -28,8 +28,10 @@ Next.js (App Router, เวอร์ชัน stable ล่าสุด) · Type
 - test: `npm test` · watch: `npm run test:watch` · coverage: `npm run test:coverage`
 - เทสต์รันด้วย `TZ=America/New_York` (ตั้งใน `vitest.config.mts`) เพื่อจับโค้ดที่พึ่ง timezone ของเครื่อง · เทสต์ที่ใช้ DOM ใส่ `// @vitest-environment happy-dom` และเรียก `cleanup()` ใน `afterEach` (ไม่ได้เปิด vitest globals)
 - นาฬิกาจำลอง: เปิดด้วย `?now=2026-12-31T07:50` (เวลาของทริป) · ปิดด้วย `?now=off` หรือปุ่ม "ใช้เวลาจริง"
-- db migration / push: (ขั้นที่ 2)
-- generate types: (ขั้นที่ 2)
+- db: โปรเจกต์ link แล้ว (ref `mcoudtofkmldnabpzslu`, Tokyo) · คำสั่ง Supabase ที่ไปยังโปรเจกต์จริงต้องใส่ `--remote`
+  - สร้าง migration: `npm run db:new -- <name>` · ดูสถานะ: `npm run db:status` · push: `npm run db:push`
+- generate types: `npm run db:types` → `src/services/supabase/types.ts` (ห้ามแก้มือ)
+- ตรวจ RLS ด้วย anon key: `npm run check:rls`
 
 ## วิธีทำงาน
 - ทำทีละขั้นตาม `docs/PROMPTS.md` จบขั้นแล้วหยุด รายงาน: ทำอะไรไป, วิธีทดสอบเอง, สิ่งที่ค้างหรือตัดสินใจเอง แล้วรอผมตรวจ

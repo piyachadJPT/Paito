@@ -10,9 +10,15 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "db:new": "supabase migration new",
+    "db:push": "supabase db push --remote",
+    "db:status": "supabase migration list --remote",
+    "db:types": "supabase gen types typescript --remote --schema public > src/services/supabase/types.ts",
+    "check:rls": "node --env-file-if-exists=.env --env-file-if-exists=.env.local scripts/check-rls.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.119.0",
     "lucide-react": "^1.73.0",
     "next": "16.4.6",
     "react": "19.3.0",
