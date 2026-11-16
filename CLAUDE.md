@@ -12,6 +12,13 @@ PWA ส่วนตัวสำหรับใช้บน iPhone ระหว�
 ## Stack
 Next.js (App Router, เวอร์ชัน stable ล่าสุด) · TypeScript strict · Tailwind CSS · lucide-react · Supabase (Postgres, Auth, RLS) · IndexedDB (Dexie) · Vitest · Vercel
 
+## โครงสร้าง
+โค้ดทั้งหมดอยู่ใน `src/` (alias `@/*` → `src/*`) · รายละเอียดใน SPEC ข้อ 13
+- `src/app` route · `src/components` UI · `src/hooks` React hooks
+- `src/services` I/O: Supabase, IndexedDB/outbox/sync, auth
+- `src/lib` pure เท่านั้น (schedule, clock, time, maps, import) ห้าม import จาก services/hooks/components
+- path ที่เขียนว่า `lib/...` ในเอกสารหมายถึง `src/lib/...`
+
 ## Commands
 <!-- เติมให้ครบตอนจบขั้นที่ 1 แล้วอัปเดตเมื่อมีคำสั่งใหม่ -->
 - dev:
@@ -66,3 +73,11 @@ Next.js (App Router, เวอร์ชัน stable ล่าสุด) · Type
 - ตัวเลขนับถอยหลังใช้ `tabular-nums` · ฟอนต์ระบบ ไม่โหลดเว็บฟอนต์
 - โหมดมืดตามระบบ · ไม่ใส่ animation ที่ไม่จำเป็น
 - การเตือนเป็นข้อความในแอปเท่านั้น ไม่มีเสียง ไม่ใช้ Notification API · ไม่เตือนตอนกำลังเดินทาง
+
+### Component ต้องเขียนเองทั้งหมด (กฎสำคัญ)
+- ทุก control ที่ผู้ใช้เห็นต้องออกแบบและเขียนเองให้เข้ากับธีมของแอป ห้ามปล่อยหน้าตา default ของ browser/iOS ได้แก่ dropdown/select, ช่องค้นหา, ช่องกรอก, textarea, checkbox, toggle, radio/segmented, stepper, ตัวเลือกวันที่และเวลา, bottom sheet, dialog ยืนยัน, toast, tooltip, scrollbar, focus ring, skeleton, empty state
+- ห้ามใช้ UI kit สำเร็จรูป (shadcn, MUI, Headless UI, Radix ฯลฯ) · ใช้ได้แค่ lucide-react สำหรับไอคอน
+- ทุก component อยู่ใน `src/components/ui/` ใช้ design tokens เดียวกัน · หน้าต่าง ๆ ต้องเรียกใช้ตัวกลางนี้ ห้ามสร้าง control แบบเฉพาะหน้า
+- เขียนเองแล้วต้องไม่เสียการเข้าถึง: ใช้ element ที่ถูกความหมาย (`button`, `input`, `label`) เป็นฐานแล้วตกแต่ง หรือใส่ role/aria และรองรับคีย์บอร์ดให้ครบ · โฟกัสต้องมองเห็นได้ · แตะได้ ≥ 44px
+- ช่องกรอกตัวอักษรขนาด ≥ 16px (กัน iOS ซูมเองตอนโฟกัส) · คง `inputmode`/`autocomplete` ที่ถูกต้องไว้ เพื่อให้ได้แป้นพิมพ์และการกรอกรหัส OTP อัตโนมัติของ iOS
+- ทุก component มีสถานะครบ: ปกติ, กด, โฟกัส, ปิดใช้งาน, error · ทั้งโหมดสว่างและมืด

@@ -42,7 +42,7 @@
 - layout: lang="th", viewport-fit=cover, theme-color สว่าง/มืด, ฟอนต์ระบบ, สีตาม SPEC 10.1 เป็น design tokens (CSS variables + Tailwind)
 - app shell: แถบเมนูล่าง 3 แท็บ (ตอนนี้ / แผนเที่ยว / ตั้งค่า) + หน้าเปล่าของแต่ละแท็บ + หน้า /login เปล่า · รองรับ safe area
 - lib/time: format เวลา "13:30 น." และวันที่ "ศ. 1 ม.ค. 2570" ด้วย timeZone ของทริป + unit test
-- lib/clock: now() ที่รองรับนาฬิกาจำลองผ่าน ?now=YYYY-MM-DDTHH:MM (จำใน sessionStorage, ?now=off เพื่อยกเลิก) + hook useNow() ที่ re-render ทุก 1 วินาทีและคำนวณใหม่เมื่อ visibilitychange/pageshow/focus + unit test
+- lib/clock: now() ที่รองรับนาฬิกาจำลองผ่าน ?now=YYYY-MM-DDTHH:MM (จำใน sessionStorage, ?now=off เพื่อยกเลิก) + hook useNow() (src/hooks) ที่ re-render ทุก 1 วินาทีและคำนวณใหม่เมื่อ visibilitychange/pageshow/focus + unit test
 - เติมหัวข้อ Commands ใน CLAUDE.md
 เสร็จเมื่อ: build, lint, typecheck, test ผ่าน · จอ 390×844 เห็นแถบเมนูถูกตำแหน่งทั้งโหมดสว่างและมืด
 หยุดแล้วรายงาน
@@ -55,8 +55,8 @@
 Project ref ของผม: <ใส่ project ref>
 - supabase init แล้ว link กับโปรเจกต์
 - migration ตาม SPEC 4.1–4.4 ครบ: enums, ตาราง, constraints, indexes, trigger updated_at, RLS, keepalive()
-- push migration · generate TypeScript types ไปที่ lib/supabase/types.ts (+ script ใน package.json)
-- lib/supabase/client.ts: browser client (persistSession, autoRefreshToken) จาก env NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY + ไฟล์ .env.example
+- push migration · generate TypeScript types ไปที่ src/services/supabase/types.ts (+ script ใน package.json)
+- src/services/supabase/client.ts: browser client (persistSession, autoRefreshToken) จาก env NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY + ไฟล์ .env.example
 - วิธีทดสอบ RLS ให้ผมรัน: anon อ่านได้ 0 แถว, insert โดยไม่ล็อกอินล้มเหลว
 - ตรวจกับผมว่าตั้งค่า Dashboard ตาม "ก่อนเริ่ม" ข้อ 3–4 ครบหรือยัง
 เสร็จเมื่อ: push migration ผ่าน, generate types ได้, ทดสอบ RLS ผ่าน
@@ -82,7 +82,7 @@ Project ref ของผม: <ใส่ project ref>
 ขั้นที่ 4 — Schedule engine (SPEC ข้อ 5, 6, 9, 11, 14.1) · pure TypeScript ไม่แตะ UI
 - lib/schedule: types, recalculateDay, shiftFrom (+ preview), getServiceDate, getNowState (6 state), computeProgress, computeDueAlerts, formatDuration
 - lib/maps: buildNavUrl, parseLocationInput
-- lib/data/import-schema.ts: zod schema ของไฟล์นำเข้า + ฟังก์ชันแปลง JSON → แถว trip/days/stops พร้อมเวลาที่คำนวณแล้ว (ยังไม่บันทึก)
+- src/lib/import/import-schema.ts: zod schema ของไฟล์นำเข้า + ฟังก์ชันแปลง JSON → แถว trip/days/stops พร้อมเวลาที่คำนวณแล้ว (ยังไม่บันทึก)
 - unit test ครบตาม SPEC 14.1 ใช้ docs/seed-trip.json เป็น fixture:
   · เวลาหลังแปลงตรงกับ _expect_* ทุกจุด
   · Lampang Festival มี gap 20 นาที และออก 00:30 ของวันถัดไป

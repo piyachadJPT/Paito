@@ -387,6 +387,7 @@ for each stop i > fromIndex (เรียงตามลำดับ):
 - ไม่มี animation ที่ไม่จำเป็น และเคารพ `prefers-reduced-motion`
 - ไอคอนจาก lucide-react
 - ทุกหน้ามีสถานะ loading (skeleton), empty, error และ offline
+- **Component เขียนเองทั้งหมด:** ทุก control (dropdown/select, ช่องค้นหา, ช่องกรอก, textarea, toggle, checkbox, segmented, stepper, ตัวเลือกวันที่/เวลา, bottom sheet, dialog, toast, skeleton, empty state, scrollbar, focus ring) ออกแบบใหม่ให้เข้ากับธีม ไม่ใช้หน้าตา default ของ browser/iOS และไม่ใช้ UI kit สำเร็จรูป · รวมไว้ที่ `src/components/ui/` · ต้องคงการเข้าถึง (semantic element หรือ role/aria, คีย์บอร์ด, โฟกัสมองเห็นได้) และช่องกรอกขนาด ≥ 16px
 
 ### 10.2 โครงหน้า
 แถบเมนูด้านล่าง 3 แท็บ (ติดล่าง เหนือ home indicator):
@@ -482,26 +483,33 @@ Bottom sheet "ปรับเวลา": [+15 นาที] [+30 นาที] [
 ## 13. สถาปัตยกรรม (แนวทาง)
 
 ```
-app/
-  layout.tsx              # metadata, viewport, theme
-  manifest.ts
-  (app)/                  # client app shell + tab bar
-    page.tsx              # ตอนนี้
-    plan/page.tsx
-    settings/page.tsx
-  login/page.tsx
-  api/keepalive/route.ts  # route handler เดียวของระบบ
-components/               # ui/, now/, plan/, sheets/
-lib/
-  schedule/               # pure: recalc, shift, nowState, serviceDay, progress, alerts, format
-  clock/                  # now() + นาฬิกาจำลอง
-  data/                   # IndexedDB schema, repositories, outbox, sync, import/export
-  supabase/               # browser client + generated types
-  maps/                   # buildNavUrl, parseLocationInput
-  time/                   # Intl formatters (th-TH + timeZone)
+src/
+  app/
+    layout.tsx              # metadata, viewport, theme
+    manifest.ts
+    (app)/                  # client app shell + tab bar
+      page.tsx              # ตอนนี้
+      plan/page.tsx
+      settings/page.tsx
+    login/page.tsx
+    api/keepalive/route.ts  # route handler เดียวของระบบ
+  components/               # ui/, now/, plan/, sheets/
+  hooks/                    # React hooks: useNow, useAuth, live queries
+  services/                 # I/O และ side effects
+    supabase/               # browser client + generated types
+    data/                   # IndexedDB (Dexie) schema, repositories, outbox, sync, import/export
+    auth/                   # AuthProvider, session gate
+  lib/                      # pure (ไม่มี I/O ไม่มี React)
+    schedule/               # recalc, shift, nowState, serviceDay, progress, alerts, format
+    clock/                  # now() + นาฬิกาจำลอง
+    maps/                   # buildNavUrl, parseLocationInput
+    time/                   # Intl formatters (th-TH + timeZone), แปลงเวลาท้องถิ่น ↔ UTC
+    import/                 # zod schema ของไฟล์นำเข้า + แปลง JSON → แถว (ยังไม่บันทึก)
 supabase/migrations/
 docs/
 ```
+- path alias `@/*` ชี้ไปที่ `src/*`
+- `lib/` ห้าม import จาก `services/`, `hooks/` หรือ `components/`
 
 - หน้า UI เป็น client components ทั้งหมด ไม่มี server-side data fetching หรือ auth ในหน้า UI
 - ค่าที่ขึ้นกับเวลา render หลัง mount เท่านั้น (กัน hydration mismatch และกันเวลาเพี้ยนเพราะ server เป็น UTC)
