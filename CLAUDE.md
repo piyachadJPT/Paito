@@ -20,14 +20,16 @@ Next.js (App Router, เวอร์ชัน stable ล่าสุด) · Type
 - path ที่เขียนว่า `lib/...` ในเอกสารหมายถึง `src/lib/...`
 
 ## Commands
-<!-- เติมให้ครบตอนจบขั้นที่ 1 แล้วอัปเดตเมื่อมีคำสั่งใหม่ -->
-- dev:
-- build:
-- lint:
-- typecheck:
-- test:
-- db migration / push:
-- generate types:
+<!-- อัปเดตเมื่อมีคำสั่งใหม่ -->
+- dev: `npm run dev`
+- build: `npm run build` · ดู production: `npm run build && npm start`
+- lint: `npm run lint`
+- typecheck: `npm run typecheck` (รัน `next typegen` ก่อน เพราะ `LayoutProps`/`PageProps` เป็น type ที่ Next สร้าง)
+- test: `npm test` · watch: `npm run test:watch` · coverage: `npm run test:coverage`
+- เทสต์รันด้วย `TZ=America/New_York` (ตั้งใน `vitest.config.mts`) เพื่อจับโค้ดที่พึ่ง timezone ของเครื่อง · เทสต์ที่ใช้ DOM ใส่ `// @vitest-environment happy-dom` และเรียก `cleanup()` ใน `afterEach` (ไม่ได้เปิด vitest globals)
+- นาฬิกาจำลอง: เปิดด้วย `?now=2026-12-31T07:50` (เวลาของทริป) · ปิดด้วย `?now=off` หรือปุ่ม "ใช้เวลาจริง"
+- db migration / push: (ขั้นที่ 2)
+- generate types: (ขั้นที่ 2)
 
 ## วิธีทำงาน
 - ทำทีละขั้นตาม `docs/PROMPTS.md` จบขั้นแล้วหยุด รายงาน: ทำอะไรไป, วิธีทดสอบเอง, สิ่งที่ค้างหรือตัดสินใจเอง แล้วรอผมตรวจ

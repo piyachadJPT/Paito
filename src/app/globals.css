@@ -1,26 +1,173 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens — see docs/SPEC.md §10.1 and "การตัดสินใจหลัง kickoff".
+ * Every color used in the UI must come from these variables.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  color-scheme: light;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Surfaces */
+  --canvas: #f4f1ea; /* warm paper */
+  --card: #fffefb;
+  --card-sunken: #ece8de;
+  --line: rgb(60 48 24 / 0.12);
+  --line-strong: rgb(60 48 24 / 0.22);
+
+  /* Text */
+  --ink: #1c1a16;
+  --ink-2: #625d53;
+  --ink-3: #8f897d; /* 3.4:1 — large text, icons, decoration only */
+
+  /* Primary: highway-sign blue leaning green */
+  --primary: #12608f;
+  --primary-pressed: #0d4c72;
+  --primary-soft: #dcebf3;
+  --on-primary: #ffffff;
+
+  /* Status (always paired with text, never color alone) */
+  --success: #2f7a4b;
+  --success-soft: #dff0e4;
+  --warning: #ea580c; /* icons, borders, dots */
+  --warning-ink: #b4440b; /* text on light surfaces (≥ 4.5:1) */
+  --warning-soft: #fcebdd;
+  --neutral: #8f897d;
+  --neutral-soft: #ebe7de;
+
+  /* Stop types */
+  --type-sight: #3d7a55;
+  --type-food: #c2562f;
+  --type-rest: #8a8174;
+  --type-lodging: #7a4e8c;
+
+  /* Floating tab bar */
+  --bar: rgb(255 254 251 / 0.78);
+  --bar-solid: #fffefb;
+  --shadow-float: 0 8px 24px rgb(40 30 10 / 0.12), 0 1px 3px rgb(40 30 10 / 0.08);
+  --focus: #12608f;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: dark;
+
+    --canvas: #000000;
+    --card: #1c1c1e;
+    --card-sunken: #2c2c2e;
+    --line: rgb(255 255 255 / 0.1);
+    --line-strong: rgb(255 255 255 / 0.2);
+
+    --ink: #f5f3ee;
+    --ink-2: #aaa59b;
+    --ink-3: #78736a;
+
+    --primary: #6cb4e0;
+    --primary-pressed: #8cc6ea;
+    --primary-soft: rgb(108 180 224 / 0.16);
+    --on-primary: #04131d;
+
+    --success: #5cc08a;
+    --success-soft: rgb(92 192 138 / 0.16);
+    --warning: #fb923c;
+    --warning-ink: #fb923c;
+    --warning-soft: rgb(251 146 60 / 0.16);
+    --neutral: #8e8a82;
+    --neutral-soft: rgb(255 255 255 / 0.08);
+
+    --type-sight: #74c08f;
+    --type-food: #f08a62;
+    --type-rest: #b3aa9c;
+    --type-lodging: #c39ad6;
+
+    --bar: rgb(28 28 30 / 0.78);
+    --bar-solid: #1c1c1e;
+    --shadow-float: 0 8px 24px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(255 255 255 / 0.06);
+    --focus: #6cb4e0;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-card: var(--card);
+  --color-card-sunken: var(--card-sunken);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-primary: var(--primary);
+  --color-primary-pressed: var(--primary-pressed);
+  --color-primary-soft: var(--primary-soft);
+  --color-on-primary: var(--on-primary);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-ink: var(--warning-ink);
+  --color-warning-soft: var(--warning-soft);
+  --color-neutral: var(--neutral);
+  --color-neutral-soft: var(--neutral-soft);
+  --color-type-sight: var(--type-sight);
+  --color-type-food: var(--type-food);
+  --color-type-rest: var(--type-rest);
+  --color-type-lodging: var(--type-lodging);
+  --color-bar: var(--bar);
+  --color-bar-solid: var(--bar-solid);
+
+  --font-sans: system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  /* Countdown numerals: SF Pro Rounded on Apple devices, system font elsewhere */
+  --font-rounded: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+
+  --radius-card: 16px;
+  --shadow-float: var(--shadow-float);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    background: var(--canvas);
+  }
+
+  body {
+    min-height: 100dvh;
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--primary-soft);
+  }
+
+  /* One focus style for every interactive element (custom, visible) */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 10px;
+  }
+
+  /* Inputs at 16px+ so iOS does not zoom on focus */
+  input,
+  textarea,
+  select {
+    font-size: max(16px, 1em);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

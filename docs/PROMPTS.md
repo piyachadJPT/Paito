@@ -42,7 +42,7 @@
 - layout: lang="th", viewport-fit=cover, theme-color สว่าง/มืด, ฟอนต์ระบบ, สีตาม SPEC 10.1 เป็น design tokens (CSS variables + Tailwind)
 - app shell: แถบเมนูล่าง 3 แท็บ (ตอนนี้ / แผนเที่ยว / ตั้งค่า) + หน้าเปล่าของแต่ละแท็บ + หน้า /login เปล่า · รองรับ safe area
 - lib/time: format เวลา "13:30 น." และวันที่ "ศ. 1 ม.ค. 2570" ด้วย timeZone ของทริป + unit test
-- lib/clock: now() ที่รองรับนาฬิกาจำลองผ่าน ?now=YYYY-MM-DDTHH:MM (จำใน sessionStorage, ?now=off เพื่อยกเลิก) + hook useNow() (src/hooks) ที่ re-render ทุก 1 วินาทีและคำนวณใหม่เมื่อ visibilitychange/pageshow/focus + unit test
+- lib/clock: now() ที่รองรับนาฬิกาจำลองผ่าน ?now=YYYY-MM-DDTHH:MM (จำใน localStorage แบบ offset ให้เวลาเดินต่อ, ?now=off เพื่อยกเลิก, มีแถบเตือน "นาฬิกาจำลอง" ค้างทุกหน้า) + hook useNow() (src/hooks) ที่ re-render ทุก 1 วินาทีและคำนวณใหม่เมื่อ visibilitychange/pageshow/focus + unit test
 - เติมหัวข้อ Commands ใน CLAUDE.md
 เสร็จเมื่อ: build, lint, typecheck, test ผ่าน · จอ 390×844 เห็นแถบเมนูถูกตำแหน่งทั้งโหมดสว่างและมืด
 หยุดแล้วรายงาน
