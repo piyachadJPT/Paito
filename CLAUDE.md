@@ -68,7 +68,7 @@ Next.js (App Router, เวอร์ชัน stable ล่าสุด) · Type
 ### ความปลอดภัย
 - เปิด RLS ทุกตาราง policy `user_id = (select auth.uid())`
 - ฝั่ง client ใช้ publishable/anon key เท่านั้น ห้ามมี service/secret key ใน `NEXT_PUBLIC_*` หรือ commit ลง repo
-- ปิด sign-up · login ด้วย email OTP 6 หลัก (`shouldCreateUser: false`)
+- ปิด sign-up · login ด้วย email OTP 8 หลัก (ต้องตรงกับ Email OTP Length ใน Supabase) (`shouldCreateUser: false`)
 - ห้าม sign out เองเมื่อ refresh token ล้มเหลวเพราะ network
 
 ### UI

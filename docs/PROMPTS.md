@@ -67,7 +67,7 @@ Project ref ของผม: <ใส่ project ref>
 
 ```
 ขั้นที่ 3 — เข้าสู่ระบบ (SPEC ข้อ 8, 10.6)
-- หน้า /login 2 ขั้น: อีเมล → รหัส OTP 6 หลัก (signInWithOtp shouldCreateUser:false → verifyOtp type:'email') · ส่งใหม่ได้หลัง 60 วินาที · error ภาษาไทย
+- หน้า /login 2 ขั้น: อีเมล → รหัส OTP 8 หลัก (signInWithOtp shouldCreateUser:false → verifyOtp type:'email') · ส่งใหม่ได้หลัง 60 วินาที · error ภาษาไทย
 - AuthProvider ฝั่ง client: อ่าน session, ฟัง onAuthStateChange, ไม่ sign out เมื่อ refresh ล้มเพราะ network
 - gate ฝั่ง client: ไม่มี session และไม่มีข้อมูลในเครื่อง → /login · session เสียแต่มีข้อมูลในเครื่อง → โหมดอ่านอย่างเดียว + แถบ "เข้าสู่ระบบอีกครั้ง" (ตอนนี้ยังไม่มีข้อมูลในเครื่อง ให้เตรียม interface ไว้ก่อน)
 - ปุ่มออกจากระบบในหน้าตั้งค่า (ยืนยันก่อน)

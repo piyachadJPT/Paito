@@ -27,7 +27,7 @@
 ## 2. ขอบเขต
 
 ### Phase 1 — MVP (ต้องเสร็จก่อนทริป)
-- ล็อกอินด้วย email OTP 6 หลัก ล็อกอินครั้งเดียวแล้วอยู่ถาวร
+- ล็อกอินด้วย email OTP 8 หลัก ล็อกอินครั้งเดียวแล้วอยู่ถาวร
 - สร้างทริป (สร้างวันอัตโนมัติจากช่วงวันที่) และนำเข้า/ส่งออกทริปเป็น JSON
 - แผนเที่ยวรายวัน: เพิ่ม แก้ ลบ สลับลำดับ ย้ายไปวันอื่น คำนวณเวลาใหม่อัตโนมัติ และล็อกเวลาบางจุดได้
 - สถานะสถานที่ (กดเท่านั้น) พร้อมย้อนกลับได้
@@ -336,7 +336,7 @@ for each stop i > fromIndex (เรียงตามลำดับ):
 
 ## 8. Auth และ session
 
-- Email OTP 6 หลัก: `signInWithOtp({ email, options: { shouldCreateUser: false } })` แล้ว `verifyOtp({ email, token, type: 'email' })`
+- Email OTP 8 หลัก: `signInWithOtp({ email, options: { shouldCreateUser: false } })` แล้ว `verifyOtp({ email, token, type: 'email' })`
 - หน้า login 2 ขั้น: กรอกอีเมล → กรอกรหัส (`inputmode="numeric"`, `autocomplete="one-time-code"`) · ส่งรหัสใหม่ได้หลัง 60 วินาที
 - ล็อกอินครั้งเดียวแล้วอยู่ถาวร: `persistSession: true`, `autoRefreshToken: true` และห้ามเปิด time-box หรือ inactivity timeout ของ session ใน Supabase
 - ถ้า refresh token ล้มเพราะ network ห้าม sign out ให้ใช้ข้อมูลในเครื่องต่อ
@@ -456,7 +456,7 @@ Bottom sheet "ปรับเวลา": [+15 นาที] [+30 นาที] [
 - นักพัฒนา (แสดงเมื่อเปิด `?dev=1` แล้วจำไว้ในเครื่อง): นาฬิกาจำลอง (ตั้งวันเวลา, +15 นาที, +1 ชม., รีเซ็ต), เวอร์ชัน build
 
 ### 10.6 หน้า Login
-ชื่อแอป "ไปต่อ" → ช่องอีเมล → [ส่งรหัส] → ช่องรหัส 6 หลัก (ตัวใหญ่) → [เข้าสู่ระบบ] · ข้อความ error ภาษาไทย (รหัสผิด, หมดอายุ, ขอถี่เกินไป)
+ชื่อแอป "ไปต่อ" → ช่องอีเมล → [ส่งรหัส] → ช่องรหัส 8 หลัก (ตัวใหญ่) → [เข้าสู่ระบบ] · ข้อความ error ภาษาไทย (รหัสผิด, หมดอายุ, ขอถี่เกินไป)
 
 ---
 
@@ -622,3 +622,8 @@ docs/
 | D13 | สิทธิ์ตาราง | default privileges ของโปรเจกต์ให้ `anon` ทุกสิทธิ์ migration จึง `revoke all ... from anon` และ grant เฉพาะ select/insert/update/delete ให้ `authenticated` (RLS ยังเป็นด่านหลัก) · `set_updated_at()` ห้าม role ทั่วไปเรียก · `keepalive()` ให้ anon และ authenticated |
 | D14 | Index เพิ่ม | `trip_days(user_id)`, `trip_stops(user_id)` เพื่อรองรับ FK และ RLS |
 | D15 | ฟังก์ชัน | ทุกฟังก์ชันตั้ง `search_path = ''` ตามคำแนะนำ security advisor |
+
+### เข้าสู่ระบบ (ขั้นที่ 3)
+| # | เรื่อง | ข้อตกลง |
+|---|---|---|
+| D16 | ความยาวรหัส OTP | 8 หลัก ตามที่ตั้งในโปรเจกต์ Supabase (Auth → Email → Email OTP Length) · ค่าในโค้ดคือ `OTP_LENGTH` ใน `src/components/ui/OtpInput.tsx` ต้องตรงกันเสมอ |
