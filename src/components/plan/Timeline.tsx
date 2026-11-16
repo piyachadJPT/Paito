@@ -32,6 +32,8 @@ export function Timeline({ stops, analysis, timeZone, onOpen }: TimelineProps) {
         const isLast = i === stops.length - 1;
         const skipped = stop.status === "skipped";
         const here = stop.status === "in_progress";
+        // the day's last lodging is tonight's bed: no departure time
+        const overnight = isLast && !isOrigin && stop.stop_type === "lodging";
         return (
           <li key={stop.id}>
             {!isOrigin && <DriveRow stop={stop} gap={gaps.get(stop.id) ?? null} conflict={conflicts.get(stop.id) ?? null} />}
@@ -43,7 +45,7 @@ export function Timeline({ stops, analysis, timeZone, onOpen }: TimelineProps) {
                 ) : (
                   <>
                     <span className={`block text-[15px] font-bold ${skipped ? "text-ink-3" : ""}`}>{t(stop.planned_arrival_at)}</span>
-                    {stop.duration_minutes > 0 && <span className="block text-[12px] text-ink-2">{t(stop.planned_departure_at)}</span>}
+                    {stop.duration_minutes > 0 && !overnight && <span className="block text-[12px] text-ink-2">{t(stop.planned_departure_at)}</span>}
                   </>
                 )}
               </div>

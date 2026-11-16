@@ -99,4 +99,26 @@ describe("PlanScreen", () => {
     const added = await stopByName("สถานที่ใหม่");
     expect(added).toMatchObject({ stop_type: "sight", duration_minutes: 60, travel_minutes: null });
   });
+
+  it("'นอนที่นี่' on the day's last place makes it tonight's lodging with no departure time", async () => {
+    const day1 = (await db.trip_days.toArray()).find((d) => d.day_number === 1)!;
+    const day1Stops = (await db.trip_stops.toArray()).filter((s) => s.trip_day_id === day1.id).sort((a, b) => a.sort_order - b.sort_order);
+    const last = day1Stops[day1Stops.length - 1];
+    // a last stop that is not lodging yet: arrival 00:45, departure 01:45
+    await db.trip_stops.put({ ...last, name: "บ้านเพื่อน", stop_type: "sight", duration_minutes: 60, planned_departure_at: iso("2027-01-01T01:45") });
+    renderPlan();
+    expect(await screen.findByText("01:45")).toBeTruthy();
+
+    // not offered on a place in the middle of the day
+    fireEvent.click(await screen.findByText("วัดพระธาตุลำปางหลวง"));
+    let sheet = await screen.findByRole("dialog", { name: "แก้ไขสถานที่" });
+    expect(within(sheet).queryByRole("button", { name: "นอนที่นี่" })).toBeNull();
+    fireEvent.click(within(sheet).getByRole("button", { name: "ปิด" }));
+
+    fireEvent.click(await screen.findByRole("button", { name: /บ้านเพื่อน/ }));
+    sheet = await screen.findByRole("dialog", { name: "แก้ไขสถานที่" });
+    await act(async () => fireEvent.click(within(sheet).getByRole("button", { name: "นอนที่นี่" })));
+    await waitFor(async () => expect((await stopByName("บ้านเพื่อน")).stop_type).toBe("lodging"));
+    expect(screen.queryByText("01:45")).toBeNull();
+  });
 });

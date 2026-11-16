@@ -70,6 +70,9 @@ function EditorBody({ trip, day, days, tripStops, stop, dayStops, onClose }: Pro
   const tz = trip.timezone;
   const index = dayStops.findIndex((s) => s.id === stop.id);
   const isOrigin = index === 0;
+  const isLast = !isOrigin && index === dayStops.length - 1;
+  // tonight's bed: the day ends here, so there is no departure to show
+  const overnight = isLast && stop.stop_type === "lodging";
   const readOnly = !repo;
 
   const [name, setName] = useState(stop.name);
@@ -172,10 +175,22 @@ function EditorBody({ trip, day, days, tripStops, stop, dayStops, onClose }: Pro
         <p className="flex items-center gap-2 rounded-[6px] border-[1.5px] border-dashed border-line-strong px-3 py-2.5 text-[15px] tabular-nums">
           <span className="font-hand text-[16px] font-bold text-ink-2">ตามแผน</span>
           <span className="font-semibold">
-            ถึง {stop.planned_arrival_at ? formatTime(stop.planned_arrival_at, tz) : "—"} · ออก{" "}
-            {stop.planned_departure_at ? formatTime(stop.planned_departure_at, tz) : "—"}
+            ถึง {stop.planned_arrival_at ? formatTime(stop.planned_arrival_at, tz) : "—"} ·{" "}
+            {overnight ? "นอนที่นี่" : `ออก ${stop.planned_departure_at ? formatTime(stop.planned_departure_at, tz) : "—"}`}
           </span>
         </p>
+      )}
+
+      {isLast && !overnight && (
+        <Button
+          size="md"
+          variant="secondary"
+          icon={<HandIcon name="lodging" size={20} />}
+          disabled={readOnly || busy}
+          onClick={() => void save({ stop_type: "lodging" }, "คืนนี้นอนที่นี่")}
+        >
+          นอนที่นี่
+        </Button>
       )}
 
       {actions.length > 0 && (
