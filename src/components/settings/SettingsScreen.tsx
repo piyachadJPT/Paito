@@ -4,6 +4,7 @@ import { EmptyIllustration } from "@/components/ui/EmptyIllustration";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { useActiveTripId, useTrips } from "@/hooks/useLocalData";
 import { AccountSection } from "./AccountSection";
+import { DevSection } from "./DevSection";
 import { SyncSettings } from "./SyncSettings";
 import { TripActions, TripsManager } from "./TripsManager";
 import { TripSettings } from "./TripSettings";
@@ -40,6 +41,7 @@ export function SettingsScreen() {
       <div className="mt-7">
         <AccountSection />
       </div>
+      <DevSection timeZone={active?.timezone} />
     </div>
   );
 }

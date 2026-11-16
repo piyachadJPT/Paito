@@ -22,7 +22,9 @@ Next.js (App Router, เวอร์ชัน stable ล่าสุด) · Type
 ## Commands
 <!-- อัปเดตเมื่อมีคำสั่งใหม่ -->
 - dev: `npm run dev`
-- build: `npm run build` · ดู production: `npm run build && npm start`
+- build: `npm run build` (= `next build` + สร้าง `public/sw.js`) · ดู production + service worker: `npm run build && npm start`
+- ไอคอน: แก้ `src/app/icon.svg` / `scripts/make-icons.mjs` แล้วรัน `node scripts/make-icons.mjs`
+- แผงนักพัฒนา: เปิดหน้าตั้งค่าด้วย `?dev=1` (ปิดด้วย `?dev=0`)
 - lint: `npm run lint`
 - typecheck: `npm run typecheck` (รัน `next typegen` ก่อน เพราะ `LayoutProps`/`PageProps` เป็น type ที่ Next สร้าง)
 - test: `npm test` · watch: `npm run test:watch` · coverage: `npm run test:coverage`

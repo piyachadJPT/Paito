@@ -668,3 +668,11 @@ docs/
 | D35 | ปุ่มนำทาง | เป็นลิงก์จริง (`target="_blank"`) ไปยัง `buildNavUrl` เพื่อให้หน้าแอปยังอยู่ระหว่างบันทึกสถานะ "เสร็จ" · การทดลอง `comgooglemaps://` บน iPhone อยู่ในขั้นที่ 9 |
 | D36 | in_transit | ไม่มีการ์ด "ต่อไป" แยก (การ์ดหลักคือจุดถัดไปแล้ว) · แสดงปุ่ม "เลื่อนแผนที่เหลือ" เมื่อช้ากว่าแผนตั้งแต่ 1 นาที |
 | D37 | ข้อมูลสำคัญ | เบอร์โทรไทย (0X-XXX-XXXX, +66…, สายด่วน 4 หลักขึ้นต้น 1) กดโทรได้ผ่าน `tel:` |
+
+### PWA และ offline (ขั้นที่ 8)
+| # | เรื่อง | ข้อตกลง |
+|---|---|---|
+| D38 | Service worker | เขียนเอง ไม่ใช้ library (ผู้ใช้เลือก) · template `scripts/sw-template.js` → `scripts/build-sw.mjs` สร้าง `public/sw.js` หลัง `next build` พร้อมรายการ precache ของ build นั้น (หน้า `/`, `/plan`, `/settings`, `/login` + `/_next/static/**` + ไอคอน/manifest) · เวอร์ชัน = `BUILD_ID` |
+| D39 | กลยุทธ์แคช | หน้า: cache first (shell เป็น static, ข้อมูลอยู่ใน IndexedDB) · `/_next/static`: cache first · ไม่แตะ origin อื่น (Supabase) และ `/api/*` · RSC payload ไม่แคช ตอน offline Next จะเปลี่ยนเป็นโหลดทั้งหน้าและได้ shell จากแคชแทน |
+| D40 | อัปเดตเวอร์ชัน | SW ใหม่รอจนผู้ใช้กด "โหลดใหม่" (ไม่ skipWaiting เอง) · ตรวจหาเวอร์ชันใหม่ทุกครั้งที่กลับเข้าแอป · ไม่ reload เองตอนติดตั้งครั้งแรก |
+| D41 | ไอคอน | หมุดขาวบนพื้น `#12608F` + เส้นทางประ (`src/app/icon.svg`) · PNG สร้างด้วย `node scripts/make-icons.mjs` (ใช้ sharp ที่มากับ Next) · iOS status bar แบบ `default` |
