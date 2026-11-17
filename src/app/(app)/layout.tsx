@@ -1,6 +1,7 @@
 import { AuthGate } from "@/components/auth/AuthGate";
 import { ReauthBanner } from "@/components/auth/ReauthBanner";
 import { ClockBanner } from "@/components/clock/ClockBanner";
+import { PushSync } from "@/components/pwa/PushSync";
 import { TabBar } from "@/components/ui/TabBar";
 import { ToastProvider } from "@/components/ui/Toast";
 
@@ -18,6 +19,7 @@ export default function AppLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <TabBar />
+        <PushSync />
       </ToastProvider>
     </AuthGate>
   );

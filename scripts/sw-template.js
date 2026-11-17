@@ -7,6 +7,7 @@
  * - /_next/static: cache first (immutable, hashed).
  * - Never touches other origins (Supabase) or /api/*.
  * - A new version waits until the page asks it to take over ("โหลดใหม่").
+ * - Shows Web Push alerts sent by /api/push/tick and opens the app on tap.
  */
 
 const VERSION = "__VERSION__";
@@ -83,4 +84,39 @@ self.addEventListener("fetch", (event) => {
   }
   // Everything else (e.g. RSC payloads for client navigation): network as usual.
   // Offline, Next.js falls back to a full navigation, which the shell above serves.
+});
+
+// Web Push (api/push/tick): { title, body, tag, url }
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = { body: event.data ? event.data.text() : "" };
+  }
+  event.waitUntil(
+    self.registration.showNotification(data.title || "ไปต่อ", {
+      body: data.body || "",
+      tag: data.tag,
+      icon: "/icons/icon-192.png",
+      data: { url: data.url || "/" },
+    }),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = new URL(event.notification.data?.url || "/", self.location.origin).href;
+  event.waitUntil(
+    (async () => {
+      const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+      const open = windows.find((w) => new URL(w.url).origin === self.location.origin);
+      if (open) {
+        await open.focus();
+        if ("navigate" in open && open.url !== url) await open.navigate(url).catch(() => undefined);
+        return;
+      }
+      await self.clients.openWindow(url);
+    })(),
+  );
 });

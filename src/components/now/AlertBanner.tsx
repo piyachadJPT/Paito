@@ -5,7 +5,7 @@ import { PaperNote } from "@/components/ui/PaperNote";
 import { nowPrefs } from "@/hooks/useNowPrefs";
 import type { Alert } from "@/lib/schedule/alerts";
 
-/** Sticky in-app alert until closed (SPEC §6), as a taped note. Text only — no sound, no notifications. */
+/** Sticky in-app alert until closed (SPEC §6), as a taped note. Text only, no sound (Web Push is sent by the server). */
 export function AlertBanner({ alerts }: { alerts: Alert[] }) {
   if (alerts.length === 0) return null;
   return (

@@ -14,6 +14,76 @@ export type Database = {
   }
   public: {
     Tables: {
+      push_devices: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          leave_on_plan: string[]
+          p256dh: string
+          trip_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          leave_on_plan?: string[]
+          p256dh: string
+          trip_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          leave_on_plan?: string[]
+          p256dh?: string
+          trip_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_devices_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      push_sent: {
+        Row: {
+          alert_key: string
+          sent_at: string
+          trip_id: string
+        }
+        Insert: {
+          alert_key: string
+          sent_at?: string
+          trip_id: string
+        }
+        Update: {
+          alert_key?: string
+          sent_at?: string
+          trip_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_sent_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       trip_days: {
         Row: {
           created_at: string
@@ -196,6 +266,7 @@ export type Database = {
     }
     Functions: {
       keepalive: { Args: never; Returns: string }
+      push_tick: { Args: never; Returns: undefined }
     }
     Enums: {
       stop_status: "not_started" | "in_progress" | "completed" | "skipped"

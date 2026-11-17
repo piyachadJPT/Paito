@@ -34,6 +34,7 @@ Next.js (App Router, เวอร์ชัน stable ล่าสุด) · Type
   - สร้าง migration: `npm run db:new -- <name>` · ดูสถานะ: `npm run db:status` · push: `npm run db:push`
 - generate types: `npm run db:types` → `src/services/supabase/types.ts` (ห้ามแก้มือ)
 - ตรวจ RLS ด้วย anon key: `npm run check:rls`
+- push: ตั้ง env ตาม `.env.example` (VAPID + `SUPABASE_SECRET_KEY`) · ใส่ Vault secrets `push_tick_url`, `cron_secret` ใน Supabase · ทดสอบ: `curl -i -X POST -H "Authorization: Bearer $CRON_SECRET" https://<โดเมน>/api/push/tick`
 - deploy: Vercel (region `sin1`, cron ใน `vercel.json`) · ทดสอบ keep-alive: `curl -i -H "Authorization: Bearer $CRON_SECRET" https://<โดเมน>/api/keepalive`
 - ทดสอบบน iPhone: `docs/TEST-CHECKLIST.md` · ทดลองใช้จริง: `docs/FIELD-TEST.md`
 
@@ -81,7 +82,7 @@ Next.js (App Router, เวอร์ชัน stable ล่าสุด) · Type
 - ตัวเลขนับถอยหลังใช้ `tabular-nums` · ฟอนต์ระบบ + Mali ที่ฝังในแอป (หัวข้อ/ตราประทับเท่านั้น ห้ามใช้กับเวลาและข้อความเตือน) · ไม่โหลดฟอนต์จาก origin อื่น
 - ธีมสว่างอย่างเดียว (สมุดเดินทาง) ไม่มีโหมดมืด · ไม่ใส่ animation ที่ไม่จำเป็น
 - ไอคอนวาดมืออยู่ใน `src/components/ui/icons/` · ภาพโปสการ์ดเลือกด้วย `src/lib/scene` (pure)
-- การเตือนเป็นข้อความในแอปเท่านั้น ไม่มีเสียง ไม่ใช้ Notification API · ไม่เตือนตอนกำลังเดินทาง
+- การเตือนในแอปเป็น banner ข้อความ ไม่มีเสียง · ตอนปิดแอปส่ง Web Push จาก server (`/api/push/tick` ทุกนาทีด้วย Supabase pg_cron) ใช้ `lib/schedule` ตัวเดียวกัน · ไม่เตือนตอนกำลังเดินทาง
 
 ### Component ต้องเขียนเองทั้งหมด (กฎสำคัญ)
 - ทุก control ที่ผู้ใช้เห็นต้องออกแบบและเขียนเองให้เข้ากับธีมของแอป ห้ามปล่อยหน้าตา default ของ browser/iOS ได้แก่ dropdown/select, ช่องค้นหา, ช่องกรอก, textarea, checkbox, toggle, radio/segmented, stepper, ตัวเลือกวันที่และเวลา, bottom sheet, dialog ยืนยัน, toast, tooltip, scrollbar, focus ring, skeleton, empty state

@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { useActiveTripId, useTrips } from "@/hooks/useLocalData";
 import { AccountSection } from "./AccountSection";
 import { DevSection } from "./DevSection";
+import { NotificationSettings } from "./NotificationSettings";
 import { SyncSettings } from "./SyncSettings";
 import { TripActions, TripsManager } from "./TripsManager";
 import { TripSettings } from "./TripSettings";
@@ -37,6 +38,7 @@ export function SettingsScreen() {
         </>
       )}
 
+      <NotificationSettings />
       <SyncSettings timeZone={active?.timezone} />
       <div className="mt-7">
         <AccountSection />
